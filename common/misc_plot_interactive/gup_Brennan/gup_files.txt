@@ -1,0 +1,9 @@
+Necessary files for gup package:
+cursmode.m
+inbounds.m
+gup.m
+gupdemo.m
+gupinit.m
+gupinit3.m
+guplmts.m
+gupzoom.m

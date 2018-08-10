@@ -1,0 +1,7 @@
+# this file list all the files to be ignored by the git version control
+
+# mat files
+*.mat
+
+# pdf files
+*.pdf

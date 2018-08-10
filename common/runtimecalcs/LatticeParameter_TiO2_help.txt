@@ -1,0 +1,27 @@
+>> [c,Delta]=LatticeParameter_TiO2_00L([2 4],[73.8807 87.8289],0.675663);
+Assume that you entered 0.67566 in Angstroms 
+    c_angstroms       Theta_calc       Delta_offset      Phi_measured  
+    ___________    ________________    ____________    ________________
+
+    2.9638         13.178    27.126    -60.703         73.881    87.829
+
+
+The above shows the output (it will give a table of values0
+Basically, needs 2 in-plane peaks (sort of hardwired for the 00L peaks)
+You can enter several sets of measurements (say for several temperatures)
+
+Assumes only ONE wavelength, and only ONE set of L's 
+e.g., L = [2 4]      (for the 002 and the 004)
+e.g., Phi = [73.8807 87.8289 ; 72.8 86.4; ... ];    where each row is Phi's for a different temperature(?)
+e.g., Lambda = 0.675663  (in Angstroms)
+e.g., Energy = 18.357  (in keV)
+You can run it as
+>> LatticeParameter_TiO2_00L(L,Phi,Lambda) 
+or 
+>> LatticeParameter_TiO2_00L(L,Phi,Energy)
+
+(it figures out whether you've given it an Energy or Lambda by the magnitude.
+Our usual Lambda (Angstrom) and Energy (keV) have quite different magnitudes
+(Our Lambda are likely 2 Angstroms or less, and the Energy are likely 6keV or more)
+
+Note - in oriention matrix, we have c = 2.958 (and a = 4.594);

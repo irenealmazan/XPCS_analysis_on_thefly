@@ -1,0 +1,24 @@
+
+Subject:
+Matlab hdf5 reader
+From:
+"Cha, Wonsuk" <wcha@anl.gov>
+Date:
+07/29/2016 07:11 PM
+To:
+"Fuoss, Paul H." <fuoss@anl.gov>, "Stephenson, Gregory B." <gbs@anl.gov>, "Thompson, Carol" <cthompson@niu.edu>, "Highland, Matthew J." <mhighland@anl.gov>
+
+Hi all,
+
+Please find an attached matlab script.
+This returns subtracted image (raw data as well if you want).
+[data, thresh]=loadhdf5(imname) gives you both images and data=loadhdf5(imname) subtracted images only.
+Data is subtracted images.
+Thresh is a structure with thresh.low and thresh.high.
+If you leave imname as blank, then it will read all hdf5 files in the folder and make them as stacks.
+Please let me know if you have questions.
+
+Wonsuk
+
+Attachments:
+loadhdf5.m	987 bytes
