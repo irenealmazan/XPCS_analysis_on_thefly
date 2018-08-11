@@ -29,6 +29,7 @@ classdef XPCS_read_data
                                    
             ROIS_struct.AXISdet = [(XCEN + [-50 50]) (YCEN + YWID) ];
             
+            %%{
             ROIS_struct.TTROIS = [...
                 (XCEN + [-XWID XWID]) (YCEN - mod(YCEN,4) + [-148 -145]) ];
             
@@ -43,10 +44,11 @@ classdef XPCS_read_data
             
             %DXHmin= round(ymax(iT)*0.75);
             %DXHmax= round(ymax(iT)*1.5);
+            %}
         end
         
        
-        function  [IIstruct] = TTsput_read(iT,TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV)
+        function  [IIstruct] = TTsput_read(iT,TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV,flagrotate)
                
               %tamount = tamountv(iT);
             TC = TCV(iT);
@@ -63,7 +65,17 @@ classdef XPCS_read_data
             [II_full,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
             
             % crops the image in the detector
-            II = II_full(CROPV(1):CROPV(2),CROPV(3):CROPV(4),:);
+            II_crop = II_full(CROPV(1):CROPV(2),CROPV(3):CROPV(4),:);
+            
+            if flagrotate
+                % rotates the image in the detector:
+                for kk = 1:size(II_crop,3)
+                    II_rot = II_crop(:,:,kk);
+                    II(:,:,kk) = II_rot';
+                end
+            end
+            
+            % Calculates the normalization factor
             [Norm] = XPCS_read_data.calc_Norm(sdata,'hexmon','Seconds');
             
             % read time

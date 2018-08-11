@@ -11,25 +11,27 @@ flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 
 pilatus_flag = 'pilatus4';% choose between 'pilatus' (beamtime March 2018) and 'pilatus4'
 
 
-% Filenames
-%specfilenameM = ['2018_0809_5']; Temp Power
 
-XCENV = [135];YCENV = [91];XWIDV = [25];YWIDV = [90];CROPV = [1 194 1 200];
+
+% Parameters initialized in
+% XPCS_initialize_parameters.TTparameters_singlerun
+%XCENV = [135];YCENV = [91];XWIDV = [25];YWIDV = [90];CROPV = [1 194 1 200];
+XCENV = [91];YCENV = [135];XWIDV = [90];YWIDV = [25];CROPV = [1 194 1 200];
 specfilenameM = ['2018_0810_1']; 
 flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 'power_series'
-		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';
-		TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';
-		TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';
+		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
+		TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
+		TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';flagrotate = [1];
 
 flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other parameters need tobe set?c
-		TCV = [800]; PWV = [15];SCNstrM = ['032']; tminv = [1000];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT';
-		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';
+		TCV = [800]; PWV = [15];SCNstrM = ['032']; tminv = [1000];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT';flagrotate = [1];
+		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
 
 
 
 
 %% Section 1
-
+%{
 % temperatures in C
 %TCV = [800]; % Equilibrium Thermocouple (new heater)
 
@@ -64,24 +66,26 @@ flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other pa
 % ? CT is this 'absolute' or relative?
 %CROPV = [1 194 1 200];
 
-% Positions of CTRs for ROIS   % CT note - this seems to be needed, whatever itis
-ymax = [8];    % CT note - this seems to be needed, whatever itis
+
 
 % Min and max on time range for delta-time average in sec
 %tminv = [2000];
 %tmaxv = [5000];
 
+%}
+% Positions of CTRs for ROIS   % CT note - this seems to be needed, whatever itis
+ymax = [8];    % CT note - this seems to be needed, whatever itis
 
 %% Section 2
 
  %%%%%% Set of parameters to calculate the area where the 2 times correlation
             % function is calculated:
 
-hwttr_allT = [32]; % row half width (pixels)=> box of 2*hwttr+1 pixels
-hwttc_allT = [1]; % col half width (pixels)
+hwttr_allT = [1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+hwttc_allT = [32]; % col half width (pixels)
 
-wrq_allT = [0];
-wcq_allT = [7];
+wrq_allT = [7];
+wcq_allT = [0];
 
 % tuning the center of the reciprocal space for the CC2avg
 % analysis (it can be larger than Ncs and Nrs respectively
@@ -89,7 +93,7 @@ offsetcc_allT = [0];
 offsetrc_allT = [0];
 
 % number of scans to bin together for 2-time calcs
-tbin_allT = [10];
+tbin_allT = [5];
 
 
 CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
@@ -105,10 +109,10 @@ CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
 %%%%%%% fit parameters and range for the single exponential decays (CC2Ns) and the time constant vs
 % q
 
-fitrange_time_iiT = [2/5];
-pin_iiT = [0 1e-2 50 0];
-dp_iiT =  [[1 1 1 0]*0.0001];
-qfitrange = [2.5e-5 1.5e-2]; %in nu or del depending the orientation of the detector (back wall with vs arm)
+fitrange_time_iiT = [2/5]; % fraction of the total time range for the fit of the CC2NS
+pin_iiT = [0 1e-2 50 0]; % initial parameters for the fit of the CC2NS  to a single exponential decay
+dp_iiT =  [[1 1 1 0]*0.0001]; % tolerance on the fitted parameters of the CC2NS
+qfitrange = [2.5e-5 1.5e-2]; % Q range for the fit of the time constants
    
    
    

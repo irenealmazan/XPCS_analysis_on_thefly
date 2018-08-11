@@ -28,7 +28,7 @@ XPCS_param_file = 'XPCS_param_TTsput_2018_08_concise_newdata';
 
 [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV,...
     ymax,tminv,tmaxv,clrs, DXImin, ...
-    DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag] = XPCS_initialize_parameters.TTparameters_singlerun(XPCS_param_file);
+    DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate] = XPCS_initialize_parameters.TTparameters_singlerun(XPCS_param_file);
 
 [fitrange_time_iiT,pin_iiT,dp_iiT,qfitrange ] ...
     = XPCS_initialize_parameters.TTparameters_fit_singlerun(XPCS_param_file);
@@ -58,7 +58,7 @@ if ~skip
         % read data
         
          warning('off','all');
-        [Read_Allscans(iT).IIstruct] = XPCS_read_data.TTsput_read(iiT(iT),TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV); % reads a dataset, makes IInormb
+        [Read_Allscans(iT).IIstruct] = XPCS_read_data.TTsput_read(iiT(iT),TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV,flagrotate); % reads a dataset, makes IInormb
         warning('on','all');
         
         %%{
@@ -128,7 +128,7 @@ for iT = iTV
     
     [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
     
-    flag_row_col = 'col';
+    flag_row_col = 'row';
     num_col_or_row = 1;
     
     %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);

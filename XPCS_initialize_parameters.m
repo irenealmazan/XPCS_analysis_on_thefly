@@ -88,7 +88,7 @@ classdef XPCS_initialize_parameters
         
         function [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV...
                 ymax,tminv,tmaxv,clrs, DXImin, ...
-                DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag] = TTparameters_singlerun(XPCS_initialize_file)
+                DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate] = TTparameters_singlerun(XPCS_initialize_file)
             % Set parameters that varied for each scan
             
             eval(XPCS_initialize_file);
@@ -423,11 +423,21 @@ classdef XPCS_initialize_parameters
             % This function initializes the relevant parameters of the experiment:
             
             % Sample to front detector distance (p 84, book 206)
+            %{
             D_ds = 4.03; % in [m]
             kvector = 9.12e10; % in [1/m]
             lambda = 2*pi/kvector; % in [m]
             pixel_size = 172e-6; % in [m]
             th_Bragg = 4.8491/2; % in [deg], taken from lab book 206, page 55
+            %}
+            
+            % Beamtime of August 2018, detector on the back wall
+            D_ds = 2.4; % approx (we should measure it, dont forget!) in [m]
+            Energ_keV = 18.35;           
+            lambda = 12.398e-10/Energ_keV; % in [m]
+            kvector = 2*pi/lambda; % in [1/m]
+            pixel_size = 172e-6; % in [m]
+            th_Bragg = 5.7225/2; % in [deg], taken from lab book 208, page 71
             
         end
         
