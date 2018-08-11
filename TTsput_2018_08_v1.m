@@ -16,7 +16,7 @@ skip = 0;
 
 % General flag to initialize the parameters for the 'equilibrium' or the
 % 'growth' or 'power_series' data:
-XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';  %
+%XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';  %
 XPCS_param_file = 'XPCS_param_TTsput_2018_08_concise_newdata';
 
 [plotsmooth,plotall,plotorig,plotnew,ixplotmin,ixplotmax,...
@@ -38,7 +38,7 @@ XPCS_param_file = 'XPCS_param_TTsput_2018_08_concise_newdata';
     tbin_allT,CWID_allT,N_degree_allT] =  XPCS_initialize_parameters.TTparameters_2timecorr_calc(XPCS_param_file);
 
 [POSITION,PAPERPOSITION,FONTSIZE,CMAX,CLIM,XCOLlabel,YROWlabel,...
-                AXISdet,DOCUclim,INFOstr] = XPCS_initialize_parameters.TTplot_parameters();
+                AXISdet,DOCUclim,INFOstr,Numbsubplots] = XPCS_initialize_parameters.TTplot_parameters();
 
 
  [ImageJ,Xstepcol,SINGLE,BKG,...
@@ -134,7 +134,7 @@ for iT = iTV
     %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
 
      % plot the CTR images in pixels:
-    DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet);
+    DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet,Numbsubplots);
     QvalFlag = 0;
     fignum = 90;
     DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbb,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
@@ -154,7 +154,7 @@ for iT = iTV
     figh = 400+iT+num_col_or_row;
     [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
     
-    DisplayFunctions_XPCS.display_CCN2S(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb]);
+    DisplayFunctions_XPCS.display_CCN2S(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],Numbsubplots);
     
 end
 

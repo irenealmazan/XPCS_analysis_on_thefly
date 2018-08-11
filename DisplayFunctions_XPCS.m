@@ -85,7 +85,7 @@ classdef DisplayFunctions_XPCS
                     end
                     
                     
-                    HL = line(([Xl Xh Xh Xl Xl]'),([Yl Yl Yh Yh Yl]'),'LineWidth',3,'Color','k');
+                    HL = line(([Xl Xh Xh Xl Xl]'),([Yl Yl Yh Yh Yl]'),'LineWidth',3,'Color','w');
                     
                 end
                 
@@ -592,10 +592,10 @@ classdef DisplayFunctions_XPCS
             
         end
         
-        function display_CCN2avg(CCfunc,indexq,flag_row_or_col,fig_ini,AXISdet)
+        function display_CCN2avg(CCfunc,indexq,flag_row_or_col,fig_ini,AXISdet,NumbSubplots)
             
            
-            NumbSubplots = 4;
+            
             counter_fig = 0;
             
             
@@ -629,7 +629,7 @@ classdef DisplayFunctions_XPCS
                             del = CCfunc(kk).scancq(iq).scanrq(indexq).del;
                     end
                     
-                    if mod(iq-1,4) == 0
+                    if mod(iq-1,NumbSubplots) == 0
                         fig_num = fig_ini+counter_fig;
                         fig_h = figure(fig_num);
                         clf;
@@ -664,10 +664,9 @@ classdef DisplayFunctions_XPCS
             end         
         end
         
-        function CCfunc = display_CCN2S(CCfunc,indexq,flag_row_or_col,fig_ini,plotrange)
+        function CCfunc = display_CCN2S(CCfunc,indexq,flag_row_or_col,fig_ini,plotrange, NumbSubplots)
             
-          
-            NumbSubplots = 4;
+         
             counter_fig = 0;
            
             

@@ -61,6 +61,8 @@ classdef XPCS_read_data
             % read data and calculate the normalization
             index_SCN = 1; % if multiple SCNs, write array
             [II_full,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
+            
+            % crops the image in the detector
             II = II_full(CROPV(1):CROPV(2),CROPV(3):CROPV(4),:);
             [Norm] = XPCS_read_data.calc_Norm(sdata,'hexmon','Seconds');
             

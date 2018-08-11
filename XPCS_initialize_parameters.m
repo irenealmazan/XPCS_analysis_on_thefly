@@ -395,7 +395,7 @@ classdef XPCS_initialize_parameters
         end
         
         function [POSITION,PAPERPOSITION,FONTSIZE,CMAX,CLIM,XCOLlabel,YROWlabel,...
-                AXISdet,DOCUclim,INFOstr] = TTplot_parameters()
+                AXISdet,DOCUclim,INFOstr,Numbsubplots] = TTplot_parameters()
             % This script contains the parameters to plot the graphs.
             
             POSITION = [.17 .10 .65 .8];
@@ -411,6 +411,9 @@ classdef XPCS_initialize_parameters
             %INFOstr = char(INFOinterest,DUM);   % currently added onto 0 and 5
             INFOstr = [];    % turn this off quickly if desired
            
+            % numbers of subplots per image when displaying the CCN2 or the
+            % CCn2_avg
+            Numbsubplots = 1;
 
         end
         
