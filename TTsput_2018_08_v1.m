@@ -16,7 +16,8 @@ skip = 0;
 
 % General flag to initialize the parameters for the 'equilibrium' or the
 % 'growth' or 'power_series' data:
-XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';
+XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';  %
+XPCS_param_file = 'XPCS_param_TTsput_2018_08_concise_newdata';
 
 [plotsmooth,plotall,plotorig,plotnew,ixplotmin,ixplotmax,...
     pcolorCC2,plothalf,plotfull,plotcorrorig,plotcorrnew,...
@@ -25,7 +26,7 @@ XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';
 
 [DOCU0,DOCU1,LOGFLAG,delay,XFRAC] = XPCS_initialize_parameters.TTparameters_allruns();
 
-[TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,...
+[TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV,...
     ymax,tminv,tmaxv,clrs, DXImin, ...
     DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag] = XPCS_initialize_parameters.TTparameters_singlerun(XPCS_param_file);
 
@@ -41,7 +42,7 @@ XPCS_param_file = 'XPCS_param_TTsput_2018_08_newdata';
 
 
  [ImageJ,Xstepcol,SINGLE,BKG,...
- scanflag,imname,p_image,ending,POINTSUMS] = XPCS_initialize_parameters.TTsput_read_ini(XPCS_param_file);
+ scanflag,imname,p_image,ending,POINTSUMS] = XPCS_initialize_parameters.TTsput_read_ini();
 
 [D_ds,kvector,lambda,pixel_size,th_Bragg] = XPCS_initialize_parameters.TT_experiment();
 
@@ -57,7 +58,7 @@ if ~skip
         % read data
         
          warning('off','all');
-        [Read_Allscans(iT).IIstruct] = XPCS_read_data.TTsput_read(iiT(iT),TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag); % reads a dataset, makes IInormb
+        [Read_Allscans(iT).IIstruct] = XPCS_read_data.TTsput_read(iiT(iT),TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV); % reads a dataset, makes IInormb
         warning('on','all');
         
         %%{
@@ -67,12 +68,12 @@ if ~skip
         switch flag_equil_or_growth
             
             case 'equilibrium'
-                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '_' specfilenameM(iT) '.mat'];
+                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
             case 'growth'
-                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT) '.mat'];
+                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
                   
             case 'power_series'
-                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT) '.mat'];
+                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
 
         end
       
@@ -92,12 +93,12 @@ for iT = iTV
          switch flag_equil_or_growth
              
              case 'equilibrium'
-                 Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
+                 Singlescan_namefile = ['Scan' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
              case 'growth'
-                 Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
+                 Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
                  
              case 'power_series'
-                Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
+                Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '_' specfilenameM(iT,:) '.mat'];
          end
         load(Singlescan_namefile);
         Read_Allscans(iT).IIstruct = Singlescan_struct.IIstruct;
@@ -127,7 +128,7 @@ for iT = iTV
     
     [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
     
-    flag_row_col = 'row';
+    flag_row_col = 'col';
     num_col_or_row = 1;
     
     %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
@@ -162,7 +163,7 @@ end
 
  % Fit the taus at different temperatures 
 pp_index = 3;
-[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,1,'row',601);
+[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,num_col_or_row,flag_row_col ,601);
 
 save(['fit_Scan_growth' SCNstrM(iT,:) '.mat'],'pout_struct');
 
@@ -171,7 +172,7 @@ save(['fit_Scan_growth' SCNstrM(iT,:) '.mat'],'pout_struct');
 for iT = 1:numel(pout_struct)
     figure;
    
-    pout_struct(iT).pout_fit = XPCS_analysis.fit_tau_with_leasqr(pout_struct(iT),'FittingFunctions.powerlaw_tau',qfitrange.nu);
+    pout_struct(iT).pout_fit = XPCS_analysis.fit_tau_with_leasqr(pout_struct(iT),'FittingFunctions.powerlaw_tau',qfitrange);
       
     
     figure(601);
@@ -202,7 +203,7 @@ DisplayFunctions_XPCS.display_growth_vs_power(PWV(iT),vel_struct,[1:numel(PWV(iT
 %DisplayFunctions_XPCS.display_growth_vs_power(power_vect,vel_struct,[5 6 7],'900 C',800);
 
 %{
-for iT = 2%iTV
+for iT = 1%iTV
     TTM_plot1; 
  end
 %}

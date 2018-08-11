@@ -62,7 +62,7 @@ classdef FittingFunctions
                
             % fit using leasqrs
             global verbose;
-            verbose = [0 1];
+            verbose = [0 0];
             
             opts_struct.stol = 0.000001;
             opts_struct.niter = 100;  

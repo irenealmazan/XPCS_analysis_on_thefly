@@ -1,10 +1,16 @@
-function [SPECpath,IMAGEpath,COMMONpath,HOMEpath] = pathdisplay    
+function [SPECpath,IMAGEpath,COMMONpath,HOMEpath] = pathdisplay(pilatus_spec)    
 % [SPECpath,IMAGEpath,COMMONpath,HOMEpath] = pathdisplay 
 % 
 % Used to pass current paths as needed. Edit this 
 % for temporary access to other paths, otherwise, it uses stpath to set up
 
-stpaths;		% get DATApath, AREApath
+switch pilatus_spec
+    case 'pilatus'
+        stpaths;		% get DATApath, AREApath
+    case 'pilatus4'
+        stpaths_pilatus4;
+        
+end
 % If need to change defaults for a one time pass, then add them here
 %%%%%%%%%%%%%%%%%%%5
 %DATAroot = '/data/dataxray/2013/2013_march_nitridedata';    

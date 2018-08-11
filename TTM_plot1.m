@@ -17,7 +17,7 @@ SoXFLAG = 0;SoYFLAG = 1;LOGFLAG = 1;
 [Allscans(iT).HS_sumimag_struct] = DisplayFunctions_XPCS.make_summed_images(Read_Allscans(iT),Allscans(iT).ROIS_struct,SoXFLAG,SoYFLAG,LOGFLAG,iT+17,ImageJ,XCOLlabel,YROWlabel,AXISdet);
 [Allscans(iT).HS_sumimag_struct] = DisplayFunctions_XPCS.display_sumpoints_1D(Read_Allscans(iT),Allscans(iT),SoXFLAG,SoYFLAG,iT+18,ImageJ,XCOLlabel,YROWlabel,AXISdet);
 
-DisplayFunctions_XPCS.plot_summed_images(Read_Allscans(iT),Allscans(iT).ROIS_struct,log10(Read_Allscans(iT).IIstruct.IInormb),iT+19,ImageJ,CLIM,XCOLlabel,YROWlabel,AXISdet,INFOstr,POINTSUMS);
+DisplayFunctions_XPCS.plot_summed_images(Read_Allscans(iT),Allscans(iT).ROIS_struct,(Read_Allscans(iT).IIstruct.IInormb),iT+19,ImageJ,CLIM,XCOLlabel,YROWlabel,AXISdet,INFOstr,POINTSUMS);
 
-ROIS_to_plot = [2,3,4];
+ROIS_to_plot = 1;%[2,3,4];
 [Allscans(iT).ROIS_struct.sum] = DisplayFunctions_XPCS.plot_ROIs_as_counters(Read_Allscans(iT),Allscans(iT),ROIS_to_plot,iT+20) ;

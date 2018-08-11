@@ -113,8 +113,8 @@ classdef DisplayFunctions_XPCS
                 Qvector_struct = XPCS_analysis.calculate_qval(xccen - ImageJ,yrcen - ImageJ,[1:Nc] - ImageJ,[1:Nr] - ImageJ,D_ds,kvector,pixel_size,th_Bragg);
                 XCOLpts = Qvector_struct.del;
                 YROWpts = Qvector_struct.nu;
-                XLabelstr = '\Delta q\_del (1/Å)';
-                YLabelstr = '\Delta q\_nu (1/Å)';
+                XLabelstr = '\Delta q\_del (1/Angstroms)';
+                YLabelstr = '\Delta q\_nu (1/Angstroms)';
                 Axis_imageFlag = 'square';
             end
             
@@ -129,7 +129,7 @@ classdef DisplayFunctions_XPCS
           
             figh = figure(fig_num);clf;
             HSstruct.HS = pcolor(XCOLpts,YROWpts,log10(mean(IInormb,3)));
-            
+            %HSstruct.HS = pcolor(XCOLpts,YROWpts,(mean(IInormb,3)));
             axis image;
                         
             %HSstruct.HS = pcolor(XCOLpts,YROWpts,(IInormb(:,:,SINGLE+ImageJ)));
@@ -171,6 +171,7 @@ classdef DisplayFunctions_XPCS
             sub1 = subplot(211);
             
             HSstruct.HS = pcolor(XCOLpts,YROWpts,log10(mean(IInormb,3)));
+            %HSstruct.HS = pcolor(XCOLpts,YROWpts,(mean(IInormb,3)));
             [HSstruct.HROI,HSstruct.COLORORDER] = showrois(ROIS,figh,3.0);
             
                         
@@ -651,7 +652,7 @@ classdef DisplayFunctions_XPCS
                     XLabelstr = 'Time (s)';
                     YLabelstr = 'Time (s)';
                     Shading_mode = ['interp'];
-                    Colorvector = [];
+                    Colorvector = [0 0.02];
                     Colorbarflag = 1;
                     Axisimagestr = 'square';
                     flagPrettyPlot = 0;
@@ -931,7 +932,7 @@ classdef DisplayFunctions_XPCS
                 pout_struct(iT).sigma = [sigma_negative sigma_positive];
                 pout_struct(iT).qvector = [qvector_toplot_negative qvector_toplot_positive];
                 pout_struct(iT).fitrange = find(~isnan(pout_struct(iT).sigma));
-                qvector_compatible = pout_struct(iT).qvector(find(~isnan(pout_struct(iT).sigma)));
+                qvector_compatible = pout_struct(iT).qvector(find(~isnan(pout_struct(iT).sigma) & ~isinf(1./pout_struct(iT).sigma)));
                 pout_struct(iT).fitrange = pout_struct(iT).fitrange(find(qvector_compatible~=0));
                 
                 errorbar(pout_struct(iT).qvector,pout_struct(iT).tau,pout_struct(iT).sigma,'*k');

@@ -35,11 +35,13 @@ if nargin==1;
 	else
 		FLAG = 1;
 	end
+else
+	FLAG = 1 ; % assume not using runparams to keep track of enddates and startdates
 end
 
 if FLAG	
 %% gets the datapaths currently in use by users
-	[DATApath]=pathdisplay;
+	[DATApath]=pathdisplay('pilatus4');
 
 	% get type of computer just in case running on PCwindows
 	% SINCE WE ARE USUALLY RUNNING EXPERIMENTS ON A UNIX COMPUTER - 

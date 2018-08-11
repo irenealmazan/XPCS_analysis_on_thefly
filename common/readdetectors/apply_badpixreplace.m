@@ -29,7 +29,7 @@ function [ImageNew,BadPixDocument,MarkImage]	= apply_badpixreplace(ImageMatrix,b
 %					(note, there is option here to replace with NaN and not with neighboring pixel)
 %					If the NaN is used, columns 3 and 4 (if they exist) will be ignored
 %				If using the NaN replacement option, it will ignore last columns but assume as Npoints x 2 array [Xbad1 Ybad1;Xbad2 Ybad2;...]
-%		FLAGS (optional vector) default is [0 0]
+%		FLAGS (optional vector) default is [0 0]  [[Flag for plotting]    [Flag for replace or NaN]]
 %				FLAGS(1) 0 noplot(default) (1 plot image(MarkImage)) (useful to show where the badpix are in file)
 %				FLAGS(2) 0 replace badpix with NaN values (default);  =1 use the replacement (the way epics/imageJ would use the badpix file)
 %							use the replacement (the way epics/imageJ would use the badpix file)
@@ -40,6 +40,7 @@ function [ImageNew,BadPixDocument,MarkImage]	= apply_badpixreplace(ImageMatrix,b
 
 % default, do not show the plot with the pixels marked, and replace Bad Pix with NaN (don't do the 'replace' with neighboring pixels
 if nargin<3;FLAGS = [0 0];end
+if numel(FLAGS)<2;FLAGS(2)=0;end
 ImageJ = 1; 	% assume that the badpix is indexed as spec or imageJ (start at 0)
 
 	[NYrow,NXcol,NZ]	= size(ImageMatrix);
@@ -67,7 +68,7 @@ ImageJ = 1; 	% assume that the badpix is indexed as spec or imageJ (start at 0)
 ImageNew = ImageMatrix;
 
 % Use replacement pixels  in the badpix file
-if all([FLAGS(2)==1 Ncolumns==2]);
+if all([FLAGS(2)==1 Ncolumns==4]);
 	
 	% locate where to find the replacment pixels
 	N2 = sub2ind([NYrow NXcol 3],REPPIX(:,2),REPPIX(:,1),ones(NUMbad,1).*2);
@@ -122,7 +123,7 @@ end
 % Visualization will be 'black' with red for bad pixels
 %		(and if replacements, then green for good, and yellow for ones that are listed as bad and as a replacement for another pixel
 
-if ~(FLAGS(2)==1);
+if (FLAGS(2)==1);
 	figure;  N1=gcf;
 		H1 = image([1:NXcol]-ImageJ,[1:NYrow]-ImageJ,MarkImage);   
 		% can plot each one separately, but together can be  RGB also

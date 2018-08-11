@@ -50,6 +50,7 @@ classdef XPCS_initialize_parameters
         function [ImageJ,Xstepcol,SINGLE,BKG,...
                 scanflag,imname,p_image,ending,POINTSUMS] = TTsput_read_ini()
             
+            %eval(XPCS_initialize_file);
             
             ImageJ = 1; % use imageJ indexing [start at 0] when denoting ROIs and when plotting pixels
             %	This applies to AXISdet and ROI values so must be consistent.
@@ -64,11 +65,13 @@ classdef XPCS_initialize_parameters
            
             % to feed the SCR function
             scanflag = 1;
-            imname = 'pil_';
+            imname = []; 	% = [] for sevchex (unique names based on filename,scanum and point
+							% = 'pil_ (put the non-unique-filename prefix used in caxis, for example
             p_image = 'p_image';
             ending = '.tif';
             
-             POINTSUMS = [];%[145 2592]-ImageJ;
+            POINTSUMS = [];%[145 2592]-ImageJ;
+ 
             
         end
         
@@ -83,12 +86,14 @@ classdef XPCS_initialize_parameters
             XFRAC = 0.1; % use a range that is a fraction of xmax
         end
         
-        function [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,...
+        function [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV...
                 ymax,tminv,tmaxv,clrs, DXImin, ...
-                DXImax,NRY,PWV] = TTparameters_singlerun(flag_equil_or_growth)
+                DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag] = TTparameters_singlerun(XPCS_initialize_file)
             % Set parameters that varied for each scan
             
+            eval(XPCS_initialize_file);
             
+            %{
             switch flag_equil_or_growth
                 
                 case 'equilibrium'
@@ -117,8 +122,8 @@ classdef XPCS_initialize_parameters
                     ymax = [8;8;8;8;8];
                     
                     % Min and max on time range for delta-time average
-                    tminv = [200;1500;1;2160;720];
-                    tmaxv = [3700;4800;4000;3700;1400];
+                    tminv = [200;2500;1;2160;720];
+                    tmaxv = [3700;3500;4000;3700;1400];
                     
                     
                 case 'growth'
@@ -134,7 +139,7 @@ classdef XPCS_initialize_parameters
                     SCNstrM = ['098';'045';'061';'041';'073';'102';'103']; % Growth
                     
                     % Center pixels in between the CTRS
-                    %%{
+                    %{
                     XCENV = [240;238;238;253;236;240;240];% del
                     YCENV = [118;119;120;120;118;120;120]; % nu
                     %}
@@ -193,7 +198,7 @@ classdef XPCS_initialize_parameters
                     
                     
             end
-            
+            %}
           
             % index for the temperatures
             nT = length(TCV);% Do only first            
@@ -211,11 +216,14 @@ classdef XPCS_initialize_parameters
            
         end
         
-        function [fitrange_time_iiT,pin_iiT,dp_iiT,qfitrange]= TTparameters_fit_singlerun(flag_equil_or_growth)
+        function [fitrange_time_iiT,pin_iiT,dp_iiT,qfitrange]= TTparameters_fit_singlerun(XPCS_initialize_file)
             % This function sets the fitrang, the initial guess and the parameters to 
             % maintain fix during the fit of the CC2NS functions in
             % SPCS_analysis.fit_CCN2S_with_leasqr
             
+            eval(XPCS_initialize_file);
+            
+            %{
             switch flag_equil_or_growth
                 
                 case 'equilibrium'
@@ -295,17 +303,20 @@ classdef XPCS_initialize_parameters
                            2.5e-3 1.5e-2;];
                     
             end
+            %}
             
         end
         
 
         
         function [hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,tbin_allT...
-                ,CWID_allT,N_degree_allT] = TTparameters_2timecorr_calc(flag_equil_or_growth)
+                ,CWID_allT,N_degree_allT] = TTparameters_2timecorr_calc(XPCS_initialize_file)
             % Set of parameters to calculate the area where the 2 times correlation
             % function is calculated:
             
+             eval(XPCS_initialize_file);
             
+            %{
              switch flag_equil_or_growth
                 
                 case 'equilibrium'
@@ -379,7 +390,7 @@ classdef XPCS_initialize_parameters
                      
              end
             
-           
+           %}
             
         end
         
@@ -389,7 +400,7 @@ classdef XPCS_initialize_parameters
             
             POSITION = [.17 .10 .65 .8];
             PAPERPOSITION = [1 1 5 4];
-            FONTSIZE = 15;
+            FONTSIZE = 8;  %=15  CT too large
             CMAX = 0.02;
             CLIM = [-1.5 2];
             

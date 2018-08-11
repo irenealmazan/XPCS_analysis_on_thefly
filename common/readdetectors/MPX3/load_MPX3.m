@@ -54,7 +54,7 @@ end
 
 
 if nargin ==3 & ~isempty(badpixfile)
-	[ImageStack,BadPixDocument] = apply_badpixreplace(ImageStack,badpixfile,[1 0]);   % no plot, will replace bad pix with NaN
+	[ImageStack,BadPixDocument] = apply_badpixreplace(ImageStack,badpixfile,[0 0]);   % no plot, and will replace bad pix with NaN
 	imdocu = BadPixDocument;
 else
 	imdocu = [];

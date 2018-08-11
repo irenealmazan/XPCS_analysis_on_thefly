@@ -46,7 +46,7 @@ classdef XPCS_read_data
         end
         
        
-        function  [IIstruct] = TTsput_read(iT,TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS)
+        function  [IIstruct] = TTsput_read(iT,TCV,specfilenameM,SCNstrM,DOCU0,DOCU1,ImageJ,Xstepcol,BKG,scanflag,imname,p_image,ending,POINTSUMS,pilatus_flag,CROPV)
                
               %tamount = tamountv(iT);
             TC = TCV(iT);
@@ -56,17 +56,18 @@ classdef XPCS_read_data
             specfilename = specfilenameM(iT,:);
             SCNstr = SCNstrM(iT,:);
             
-            STR = XPCS_read_data.read_paths_prepare_STR(scanflag,imname,p_image,ending);
+            STR = XPCS_read_data.read_paths_prepare_STR(scanflag,imname,p_image,ending,pilatus_flag);
             
             % read data and calculate the normalization
             index_SCN = 1; % if multiple SCNs, write array
-            [II,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
-            [Norm] = XPCS_read_data.calc_Norm(sdata);
+            [II_full,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
+            II = II_full(CROPV(1):CROPV(2),CROPV(3):CROPV(4),:);
+            [Norm] = XPCS_read_data.calc_Norm(sdata,'hexmon','Seconds');
             
             % read time
             timestampX_flag = 0;   % timestamp flag from tif is not great, keep use spec
             lastframes_ini = [];
-            [timeX,timestampX,lastframes, Xsteps,Xamount,SCNXLABEL] = XPCS_read_data.calc_TimeX(sdata,timestampX,timestampX_flag,lastframes_ini,Xstepcol,ImageJ);
+            [timeX,timestampX,lastframes, Xsteps,Xamount,SCNXLABEL] = XPCS_read_data.calc_TimeX(sdata,timestampX,timestampX_flag,lastframes_ini,Xstepcol,ImageJ,'hexmon');
             
             % correct data: normalization,background and flat field corrections
             BKG_FF_Flag = 0;
@@ -105,14 +106,15 @@ Flag_pixels = 1;
         end
             
         
-        function STR = read_paths_prepare_STR(scanflag,imname,p_image,ending)
+        function STR = read_paths_prepare_STR(scanflag,imname,p_image,ending,pilatus_flag)
             % this function prepares the STR structure which generates the
             % paths where the AREA detector images are stored.
             
-            [SPECpath,AREApath,COMMONpath,HOMEpath] = pathdisplay;
+            [SPECpath,AREApath,COMMONpath,HOMEpath] = pathdisplay(pilatus_flag);
             
             STR.scanflag=scanflag;
-            STR.imname = imname;
+            STR.imname = imname;    % CT notes - imname tells us whether to use something like 'pil_' (caxis) non-unique names 
+									%or to use our better (IMHO) scheme of having unique names. =[] (empty) for the Unique names
             STR.SPECpath = SPECpath;
             STR.AREApath = AREApath;   % need to change pathdisplay if need pilatus
             STR.p_image = p_image;   %% [] if it uses the preferred points instead
@@ -133,20 +135,21 @@ Flag_pixels = 1;
             SCNs = eval(SCNstr);
             SCNs = SCNs(index_SCN);
             
-            [NameMatrix,sdata] = make_imnames_2017_07(specfilename,SCNs,STR);
+            [NameMatrix,sdata] = make_imnames_2018_08(specfilename,SCNs,STR);
             FullNameArea = addnames2matrix([STR.AREApath,filesep],NameMatrix.fullfilenames);
             
-            [II,timestampX] = load_MPX3(FullNameArea);
+            [II,timestampX] = load_MPX3(FullNameArea,[],'badpix_CTpil4_2018_08.txt');  % CT you might want to pass as load_MPX3(FullNameArea,[],'badpixelfile') will replace bad pixels with NaN
+														% badpixel
             
             % prepare the titles of the figures
             
             TITLEstuct.TITLEstr1 = char(...
-                [pfilename(specfilename),' #', SCNstr,' : ', sdata.SCNDATE],...
-                [sdata.SCNTYPE],...
+                [pfilename(specfilename),' #', SCNstr,' : ', sdata.SCNDATE{1}],...
+                [sdata.SCNTYPE{1}],...
                 [DOCU0,' ',DOCUscan]);
             
             TITLEstuct.TITLEstrshort = char(...
-                [pfilename(specfilename),' #',SCNstr, ' : ',sdata.SCNTYPE]);
+                [pfilename(specfilename),' #',SCNstr, ' : ',sdata.SCNTYPE{1}]);
             
             TITLEstuct.TITLEstr2 = char(...
                 [pfilename(specfilename),' #',SCNstr]);
@@ -155,16 +158,16 @@ Flag_pixels = 1;
         end
         
         
-        function [Norm] = calc_Norm(sdata)
+        function [Norm] = calc_Norm(sdata,collabel_nom,collabel_secperpoint)
             % This function reads information about sdata and calculates
             % the normalizing factor
             
-            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hubmon'));
+            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,collabel_nom));
             MONave 	= mean(hubmon);
             %valve_p	= sdata.DATA(:,chan2col(sdata.collabels,'valve_p'));
             %valve_v	= sdata.DATA(:,chan2col(sdata.collabels,'valve_v'));
             %secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,'Seconds'));
-            secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,'Sec'));
+            secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,collabel_secperpoint));
            
             
             % for norm use mean hexmon - since slit size changes a lot
@@ -175,10 +178,10 @@ Flag_pixels = 1;
 
         end 
         
-        function [timeX,timestampX,lastframes, Xsteps,Xamount,SCNXLABEL] = calc_TimeX(sdata,timestampX,timestampX_flag,lastframes,Xstepcol,ImageJ)
+        function [timeX,timestampX,lastframes, Xsteps,Xamount,SCNXLABEL] = calc_TimeX(sdata,timestampX,timestampX_flag,lastframes,Xstepcol,ImageJ,collabel_nom)
             % Note the timestamp for the medipix is only to 1 second, not to milliseconds
             % So need to use the spec information for time.
-            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hubmon'));
+            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,collabel_nom));
             timestampSpec	= sdata.DATA(:,chan2col(sdata.collabels,'Time'));
             timestampEpoch  = sdata.DATA(:,chan2col(sdata.collabels,'Epoch'));
             
@@ -300,8 +303,9 @@ Flag_pixels = 1;
                 mI = mean(IInormb,3);
                 flim = flimsd*sqrt(mI);
             else
-                % Alternately, just look for big ones
-                flim = flimc;
+                % Can find these by e.g.
+                bp = find(max(IInormb,[],3)>1500);
+                [ii_rows,jj_cols] = ind2sub([516 516],bp);
             end
             
             Nfluct = 0;
@@ -335,6 +339,7 @@ Flag_pixels = 1;
         end
         
        
+            
             
             
     end

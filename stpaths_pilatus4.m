@@ -7,7 +7,7 @@ nisaba_ROOT 	= '/DATA/DATA';
 irene_ROOT    = '/Volumes/Irene_HD';%'./DATA';%   %<<< fix this ??? piece to point to Data in atoz
 
 %% ENDroot is something that typically changes per run/experiment
-ENDroot 	= '2018/2018_03_sputTiO2_XPCS';  %%<< this allows some more pointing
+ENDroot 	= '2018/2018_08_sputTiO2hexapod_XPCS';  %%<< this allows some more pointing
 %ENDroot_atoz = '2017/Cycle_3/huber';
 ENDroot_atoz = 'Cycle_01_to_04/huber';
 
