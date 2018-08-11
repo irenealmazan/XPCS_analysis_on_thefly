@@ -1139,8 +1139,28 @@ classdef DisplayFunctions_XPCS
             DisplayFunctions_XPCS.display_style( subh2 ,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
             
 
-        end
+         end
         
+         function display_contrast(IInormb,array_rows,title_str,clrs)
+             
+             IINormb_sum  = sum(IInormb,3);
+             
+             
+             
+             figure(2);
+             clf;
+             hold on;
+             counter_color = 1;
+             for jj = array_rows
+                 h = plot(IINormb_sum(jj,:),'color',clrs(counter_color));
+              
+                 counter_color = counter_color+1;
+             end
+               %set(h,{'color'},num2cell(jet(numel(array_rows)),2))
+             xlabel('pix(X)'); 
+             title(title_str);
+             
+         end
         
         function display_style(figh,flag,Titlestr,Namestr,Xlabelstr,Ylabelstr,shadingstr,Axislim_vect,flagPrettyPlot,COLORVECTOR,Colorbarflag,axisimagestr)
             

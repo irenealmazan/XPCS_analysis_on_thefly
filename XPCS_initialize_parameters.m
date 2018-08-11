@@ -207,8 +207,8 @@ classdef XPCS_initialize_parameters
             iiT = 1:nT; % to plot all
             %iiT = 1; % to plot only one
            
-            %clrs = 'rgbcmkrgbcmkrgbcmkrgbcmk';
-            clrs = 'orogobocomokxrxgxbxcxmxk*r*g*b*c*m*k.r.g.b.c.m.k';
+            clrs = 'rgbcmkrgbcmkrgbcmk';
+            %clrs = 'orogobocomokxrxgxbxcxmxk*r*g*b*c*m*k.r.g.b.c.m.k';
             
             DXImin = 5;
             DXImax = 15;            

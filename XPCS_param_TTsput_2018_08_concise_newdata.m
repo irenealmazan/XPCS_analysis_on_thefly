@@ -26,8 +26,10 @@ flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 
 flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other parameters need tobe set?c
 		TCV = [800]; PWV = [15];SCNstrM = ['032']; tminv = [1000];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT';flagrotate = [1];
 		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
-
-
+        TCV = [400]; PWV = [0];SCNstrM = ['063']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 10 microns hslit';flagrotate = [1];
+        TCV = [400]; PWV = [0];SCNstrM = ['064']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 20 microns hslit';flagrotate = [1];
+        TCV = [400]; PWV = [0];SCNstrM = ['065']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 20 microns hslit';flagrotate = [1];
+		TCV = [400]; PWV = [0];SCNstrM = ['067']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
 
 
 %% Section 1
@@ -93,7 +95,7 @@ offsetcc_allT = [0];
 offsetrc_allT = [0];
 
 % number of scans to bin together for 2-time calcs
-tbin_allT = [5];
+tbin_allT = [10];
 
 
 CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
