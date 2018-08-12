@@ -22,10 +22,11 @@ flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 
 		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
         TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
         TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';flagrotate = [1];
-%{
-flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other parameters need tobe set?c
+
+flag_equil_or_growth = 'growth'; %?? should it be growth? and what other parameters need tobe set?c
 		TCV = [800]; PWV = [15];SCNstrM = ['032']; tminv = [1000];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT';flagrotate = [1];
-		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
+        %{
+        TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
         TCV = [400]; PWV = [0];SCNstrM = ['063']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 10 microns hslit';flagrotate = [1];
         TCV = [400]; PWV = [0];SCNstrM = ['064']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 20 microns hslit';flagrotate = [1];
         TCV = [400]; PWV = [0];SCNstrM = ['065']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 20 microns hslit';flagrotate = [1];
@@ -114,8 +115,8 @@ ymax = [8];    % CT note - this seems to be needed, whatever itis
  %%%%%% Set of parameters to calculate the area where the 2 times correlation
  %%%%%function is calculated:
 
-hwttr_allT = [1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
-hwttc_allT = [32]; % col half width (pixels)
+hwttr_allT = [0]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+hwttc_allT = [64]; % col half width (pixels)
 
 wrq_allT = [7];
 wcq_allT = [0];

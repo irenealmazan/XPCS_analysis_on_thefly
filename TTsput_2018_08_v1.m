@@ -135,10 +135,10 @@ for iT = iTV
     flag_row_col = 'row';
     num_col_or_row = 1;
     
-    col_array = [80];
+    col_array = [70];
     DisplayFunctions_XPCS.display_IInormbbref_vs_time(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc.offttr,col_array,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg,1);
-    row_array = [23];
-    time_array = [1:10:169];
+    row_array = [30];
+    time_array = [1:10:209];
     DisplayFunctions_XPCS.display_IInormbbref_vs_del(Allscans(iT).IIbin_struct,row_array,time_array,70+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg,4,ImageJ);
     
     % plot the two-time correlation function

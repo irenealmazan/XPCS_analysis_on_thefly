@@ -630,7 +630,7 @@ classdef DisplayFunctions_XPCS
                     plot(col_array ,squeeze(IInormbb_ref(irs,:,its) ),'k','LineWidth',3.0)
             
                     % calculate corresponding qvalues            
-                    %Qval_struct = XPCS_analysis.calculate_qval(xccen,yrcen,ics,irs,D_ds,kvector,pixel_size,th_Bragg);
+                    Qval_struct = XPCS_analysis.calculate_qval(xccen,yrcen,col_array,irs,D_ds,kvector,pixel_size,th_Bragg);
 
                     %legend('IInormbb(irs,:,its)',['Fit IInormbb to poly N = ' num2str(Ndeg)],'mean(IInormbb,3)');
                     
@@ -645,7 +645,7 @@ classdef DisplayFunctions_XPCS
             
                     
                     Namestr = ['Pixel intensity vs time ' num2str(1+(counter_fig-1)*NumbSubplots) ' and ' num2str((counter_fig)*NumbSubplots) IIbin_struct.TITLEstuct.TITLEstr2];                   
-                    Titlestr_1line = {'its = ' num2str(its) 'time = ' num2str(Xamountb(its)) ' (sec) irs = ' num2str(irs) };
+                    Titlestr_1line = {'its = ' num2str(its) 'time = ' num2str(Xamountb(its)) ' (sec) '  ' irs = ' num2str(irs) ' nu = ' num2str(Qval_struct.nu,'%10.3e') ' (1/A)' };
                     Titlestr = {[Titlestr_1line{1:5}] [Titlestr_1line{6:end}]};
                     XLabelstr = 'Pix(X)';
                     YLabelstr = 'Intensity';
