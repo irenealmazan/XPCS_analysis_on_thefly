@@ -127,7 +127,7 @@ classdef XPCS_analysis
             
             IInormbb_ref = zeros(Nrs,Ncsc,Ntbc);
             for kk = 1:Nrs
-                IInormbb_ref(kk,:,:) = conv2(squeeze(IInormbb(kk,:,:)),filt,'valid');
+                IInormbb_ref(kk,:,:) = conv2(squeeze(IInormbb(kk,:,:)),filt','valid');
             end
             
             IIbin_struct.IInormbb_ref = IInormbb_ref;

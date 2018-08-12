@@ -20,10 +20,9 @@ XCENV = [91];YCENV = [135];XWIDV = [90];YWIDV = [25];CROPV = [1 194 1 200];
 specfilenameM = ['2018_0810_1']; 
 flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 'power_series'
 		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
-%{
         TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
-		TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';flagrotate = [1];
-
+        TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';flagrotate = [1];
+%{
 flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other parameters need tobe set?c
 		TCV = [800]; PWV = [15];SCNstrM = ['032']; tminv = [1000];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT';flagrotate = [1];
 		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
@@ -142,8 +141,8 @@ CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
 % these values should be moved to outer program
 % need to optimize by overplotting smoothed function and data
 maxpd = 2; % determines maximum degree of smoothing polynomial
-iii = 5; % half-width of pixel range in del
-jjj = 5; % half-width of time steps
+iii = 4; % half-width of pixel range in del
+jjj = 15; % half-width of time steps
 
 
  %% Section 3

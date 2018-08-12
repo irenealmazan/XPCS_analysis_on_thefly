@@ -102,8 +102,8 @@ classdef DisplayFunctions_XPCS
             
             % Read variables to plot 
             if QvalFlag == 0
-                XCOLpts = IIstruct.XCOLpts; % = [1:IIstruct.Nc] - ImageJ as calculated in XCPS_read_data.TTsput_read
-                YROWpts = IIstruct.YROWpts; % = [1:IIstruct.Nr] - ImageJ
+                XCOLpts = [1:Nc] - ImageJ; % = [1:IIstruct.Nc] - ImageJ as calculated in XCPS_read_data.TTsput_read
+                YROWpts = [1:Nr] - ImageJ; % = [1:IIstruct.Nr] - ImageJ
                 XLabelstr = XCOLLabel;
                 YLabelstr = YROWLabel;
                 Axis_imageFlag = 'image';
@@ -520,7 +520,7 @@ classdef DisplayFunctions_XPCS
             
         end
         
-        function display_IInormbbref_vs_time(IIbin_struct,boxcenterrc_struct,fig_ini,AXISdet,D_ds,kvector,pixel_size,th_Bragg)
+        function display_IInormbbref_vs_time(IIbin_struct,row_array,col_array,fig_ini,AXISdet,D_ds,kvector,pixel_size,th_Bragg,NumbSubplots)
             
            
             IInormbb = IIbin_struct.IInormbbc;
@@ -537,13 +537,12 @@ classdef DisplayFunctions_XPCS
             Nc = size(IInormbb,2);
             xccen = 1 + (Nc - 1)/2;
             yrcen = 1 + (Nr - 1)/2;
-            
-            NumbSubplots = 4;
+                        
             counter_fig = 0;
             counter_pixel = 1;
             
-            for ics = boxcenterrc_struct.offttc
-                for irs = boxcenterrc_struct.offttr
+            for ics = col_array
+                for irs = row_array
                     
                      if mod(counter_pixel-1,NumbSubplots) == 0
                         fig_num = fig_ini+counter_fig;
@@ -591,6 +590,79 @@ classdef DisplayFunctions_XPCS
             end
             
         end
+        
+          function display_IInormbbref_vs_del(IIbin_struct,row_array,time_array,fig_ini,AXISdet,D_ds,kvector,pixel_size,th_Bragg,NumbSubplots,ImageJ)
+            
+           
+            IInormbb = IIbin_struct.IInormbbc;
+            IInormbb_ref = IIbin_struct.IInormbb_ref;
+            Xamountb = IIbin_struct.Xamountb_ref;
+            
+            if isfield(IIbin_struct,'N_degree')
+                Ndeg = IIbin_struct.N_degree;
+            else
+                Ndeg = 0;
+            end
+            
+            Nr = size(IInormbb,1);
+            Nc = size(IInormbb,2);
+            col_array = [1:Nc]-ImageJ;
+            xccen = 1 + (Nc - 1)/2;
+            yrcen = 1 + (Nr - 1)/2;
+            
+           
+            counter_fig = 0;
+            counter_pixel = 1;
+            
+            
+            for irs = row_array
+                for its = time_array
+                     if mod(counter_pixel-1,NumbSubplots) == 0
+                        fig_num = fig_ini+counter_fig;
+                        fig_h = figure(fig_num);
+                        clf;
+                        counter_fig = counter_fig + 1;
+                    end
+                    
+                    subh = subplot(sqrt(NumbSubplots),sqrt(NumbSubplots),counter_pixel-NumbSubplots*(counter_fig-1)); 
+                    hold on;
+                    plot(col_array ,squeeze(IInormbb(irs,:,its)),'-ob');
+                    plot(col_array ,squeeze(IInormbb_ref(irs,:,its) ),'k','LineWidth',3.0)
+            
+                    % calculate corresponding qvalues            
+                    %Qval_struct = XPCS_analysis.calculate_qval(xccen,yrcen,ics,irs,D_ds,kvector,pixel_size,th_Bragg);
+
+                    %legend('IInormbb(irs,:,its)',['Fit IInormbb to poly N = ' num2str(Ndeg)],'mean(IInormbb,3)');
+                    
+                    counter_pixel = counter_pixel  + 1;
+                    
+                    if ~isempty(AXISdet)
+                        Axislim_vect = AXISdet;
+                    else
+                        %Axislim_vect = [min(col_array) max(col_array) min(squeeze(IInormbb(irs,:,its))) max(squeeze(IInormbb(irs,:,its)))];
+                        Axislim_vect = [50 110 min(squeeze(IInormbb(irs,:,its))) max(squeeze(IInormbb(irs,:,its)))];
+                    end
+            
+                    
+                    Namestr = ['Pixel intensity vs time ' num2str(1+(counter_fig-1)*NumbSubplots) ' and ' num2str((counter_fig)*NumbSubplots) IIbin_struct.TITLEstuct.TITLEstr2];                   
+                    Titlestr_1line = {'its = ' num2str(its) 'time = ' num2str(Xamountb(its)) ' (sec) irs = ' num2str(irs) };
+                    Titlestr = {[Titlestr_1line{1:5}] [Titlestr_1line{6:end}]};
+                    XLabelstr = 'Pix(X)';
+                    YLabelstr = 'Intensity';
+                    Shading_mode = [''];
+                    Colorvector = [];
+                    Colorbarflag = 0;
+                    Axisimagestr = 'square';
+                    flagPrettyPlot = 0;
+                    
+                    DisplayFunctions_XPCS.display_style(subh,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr );
+
+                end
+                    
+            end
+            
+        end
+        
         
         function display_CCN2avg(CCfunc,indexq,flag_row_or_col,fig_ini,AXISdet,NumbSubplots)
             

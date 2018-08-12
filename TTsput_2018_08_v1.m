@@ -135,19 +135,26 @@ for iT = iTV
     flag_row_col = 'row';
     num_col_or_row = 1;
     
-    %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
-
-     % plot the CTR images in pixels:
+    col_array = [80];
+    DisplayFunctions_XPCS.display_IInormbbref_vs_time(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc.offttr,col_array,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg,1);
+    row_array = [23];
+    time_array = [1:10:169];
+    DisplayFunctions_XPCS.display_IInormbbref_vs_del(Allscans(iT).IIbin_struct,row_array,time_array,70+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg,4,ImageJ);
+    
+    % plot the two-time correlation function
     DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet,Numbsubplots);
+
+    
+     % plot the CTR images in pixels:
     QvalFlag = 0;
     fignum = 90;
-    DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbb,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
+    DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbbc,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
     DisplayFunctions_XPCS.display_grid_CCN2avg(Allscans(iT).CCN2avg_struct.ittccen,Allscans(iT).CCN2avg_struct.ittrcen,Allscans(iT).CCN2avg_struct.Ncq_Nrq(1),Allscans(iT).CCN2avg_struct.Ncq_Nrq(2),QvalFlag,iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,fignum+iT,ImageJ,D_ds,kvector,pixel_size,th_Bragg);
     
     % plot the CTR images in reciprocal space units
     QvalFlag = 1;
     fignum = 80;
-    DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbb,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
+    DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbbc,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
     DisplayFunctions_XPCS.display_grid_CCN2avg(Allscans(iT).CCN2avg_struct.ittccen,Allscans(iT).CCN2avg_struct.ittrcen,Allscans(iT).CCN2avg_struct.Ncq_Nrq(1),Allscans(iT).CCN2avg_struct.Ncq_Nrq(2),QvalFlag,iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,fignum+iT,ImageJ,D_ds,kvector,pixel_size,th_Bragg);
     
     
@@ -158,7 +165,7 @@ for iT = iTV
     figh = 400+iT+num_col_or_row;
     [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
     
-    DisplayFunctions_XPCS.display_CCN2S(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],Numbsubplots);
+    DisplayFunctions_XPCS.display_CCN2S(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,101+iT,[2:size(Allscans(iT).IIbin_struct.IInormbbc,3)],Numbsubplots);
     
 end
 
