@@ -20,7 +20,8 @@ XCENV = [91];YCENV = [135];XWIDV = [90];YWIDV = [25];CROPV = [1 194 1 200];
 specfilenameM = ['2018_0810_1']; 
 flag_equil_or_growth = 'equilibrium'; % choose among 'equilibrium', 'growth' or 'power_series'
 		TCV = [800]; PWV = [0];SCNstrM = ['019']; tminv = [2000];tmaxv = [5000]; DOCU = '[???] not printed';flagrotate = [1];
-		TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
+%{
+        TCV = [800]; PWV = [0];SCNstrM = ['037']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
 		TCV = [800]; PWV = [0];SCNstrM = ['038']; tminv = [1];tmaxv = [2500]; DOCU = '20um s6hgap 3%O2 30mT shutter closed; oscillations in later';flagrotate = [1];
 
 flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other parameters need tobe set?c
@@ -31,7 +32,38 @@ flag_equil_or_growth = 'equilibrium'; %?? should it be growth? and what other pa
         TCV = [400]; PWV = [0];SCNstrM = ['065']; tminv = [1];tmaxv = [2000]; DOCU = '400 C, 20 microns hslit';flagrotate = [1];
 		TCV = [400]; PWV = [0];SCNstrM = ['067']; tminv = [1];tmaxv = [5000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
 
+% set of data to investigate the constrast:
+XCENV = [91];YCENV = [135];XWIDV = [90];YWIDV = [25];CROPV = [1 194 1 200]
+specfilenameM = ['2018_0810_1']; 
+flag_equil_or_growth = 'equilibrium';
+        TCV = [700]; PWV = [0];SCNstrM = ['078']; tminv = [1];tmaxv = [1000]; DOCU = '10um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
+        TCV = [700]; PWV = [0];SCNstrM = ['079']; tminv = [1];tmaxv = [2200]; DOCU = '20um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
+        TCV = [700]; PWV = [0];SCNstrM = ['080']; tminv = [1];tmaxv = [2000]; DOCU = '20um s6hgap 3%O2 30mT shutter closed';flagrotate = [1];
+flag_equil_or_growth = 'growth'                  
+TCV = [700]; PWV = [0];SCNstrM = ['081']; tminv = [1000];tmaxv = [2976]; DOCU = '20um s6hga 700 C growth 10 W';flagrotate = [1];
+        
+%{
+        TCV = [750]; PWV = [0];SCNstrM = ['085']; tminv = [1];tmaxv = [2000]; DOCU = '20um s6hgap 750 C shutter close and rf off';flagrotate = [1];
+        TCV = [750]; PWV = [0];SCNstrM = ['087']; tminv = [1];tmaxv = [2200]; DOCU = '20um s6hgap 750 c shutter close and rf on';flagrotate = [1];
 
+        
+flag_equil_or_growth = 'growth'        
+        TCV = [750]; PWV = [0];SCNstrM = ['088']; tminv = [500];tmaxv = [2200]; DOCU = '20um s6hgap 750 C growth 10 W';flagrotate = [1];
+
+flag_equil_or_growth = 'equilibrium';
+        TCV = [800]; PWV = [0];SCNstrM = ['104']; tminv = [1];tmaxv = [2100]; DOCU = '20um s6hgap 800 C shutter closed and rf on';flagrotate = [1];
+
+flag_equil_or_growth = 'growth'        
+        TCV = [800]; PWV = [0];SCNstrM = ['106']; tminv = [500];tmaxv = [2200]; DOCU = '20um s6hgap 800 C growth 10 W';flagrotate = [1];
+  %}    
+
+XCENV = [91];YCENV = [135];XWIDV = [90];YWIDV = [25];CROPV = [1 194 1 200]       
+specfilenameM = ['2018_0811_1'];   
+        TCV = [850]; PWV = [0];SCNstrM = ['009']; tminv = [1];tmaxv = [10]; DOCU = '850 C test';flagrotate = [1];
+        TCV = [850]; PWV = [0];SCNstrM = ['010']; tminv = [1];tmaxv = [4900]; DOCU = '20 microns shgap 850 C shutter close, rf off';flagrotate = [1];
+        TCV = [850]; PWV = [0];SCNstrM = ['013']; tminv = [700];tmaxv = [2800]; DOCU = '20 microns shgap 850 C growth at 10 W';flagrotate = [1];
+%}
+        
 %% Section 1
 %{
 % temperatures in C
@@ -81,7 +113,7 @@ ymax = [8];    % CT note - this seems to be needed, whatever itis
 %% Section 2
 
  %%%%%% Set of parameters to calculate the area where the 2 times correlation
-            % function is calculated:
+ %%%%%function is calculated:
 
 hwttr_allT = [1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
 hwttc_allT = [32]; % col half width (pixels)
@@ -103,6 +135,15 @@ CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
  % degree of the polynomial when we fit the IInormbb reference
  % in the new way of analysis
  N_degree_allT = [1 ];
+ 
+ % parameters to initialize the 2-D Savitzky-Golay smoothing filter
+% For symmetric di or dj, use even pdi, pdj; next higher odd gives same
+% answer
+% these values should be moved to outer program
+% need to optimize by overplotting smoothed function and data
+maxpd = 2; % determines maximum degree of smoothing polynomial
+iii = 5; % half-width of pixel range in del
+jjj = 5; % half-width of time steps
 
 
  %% Section 3

@@ -520,11 +520,11 @@ classdef DisplayFunctions_XPCS
             
         end
         
-        function display_IInormbbref(IIbin_struct,boxcenterrc_struct,fig_ini,AXISdet,D_ds,kvector,pixel_size,th_Bragg)
+        function display_IInormbbref_vs_time(IIbin_struct,boxcenterrc_struct,fig_ini,AXISdet,D_ds,kvector,pixel_size,th_Bragg)
             
            
-            IInormbb = IIbin_struct.IInormbb;
-            Xamountb = IIbin_struct.Xamountb;
+            IInormbb = IIbin_struct.IInormbbc;
+            Xamountb = IIbin_struct.Xamountb_ref;
             IInormbb_ref = IIbin_struct.IInormbb_ref;
             
             if isfield(IIbin_struct,'N_degree')
@@ -1141,22 +1141,21 @@ classdef DisplayFunctions_XPCS
 
          end
         
-         function display_contrast(IInormb,array_rows,title_str,clrs)
+         function display_contrast(IInormb,array_rows,title_str)
              
              IINormb_sum  = sum(IInormb,3);
              
-             
+             color_matrix = jet(numel(array_rows));
              
              figure(2);
              clf;
              hold on;
              counter_color = 1;
              for jj = array_rows
-                 h = plot(IINormb_sum(jj,:),'color',clrs(counter_color));
-              
+               h = plot(IINormb_sum(jj,:),'Color',color_matrix(counter_color,:));
+               
                  counter_color = counter_color+1;
              end
-               %set(h,{'color'},num2cell(jet(numel(array_rows)),2))
              xlabel('pix(X)'); 
              title(title_str);
              

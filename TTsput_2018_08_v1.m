@@ -28,14 +28,14 @@ XPCS_param_file = 'XPCS_param_TTsput_2018_08_concise_newdata';
 
 [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV,...
     ymax,tminv,tmaxv,clrs, DXImin, ...
-    DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate] = XPCS_initialize_parameters.TTparameters_singlerun(XPCS_param_file);
+    DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate,DOCU] = XPCS_initialize_parameters.TTparameters_singlerun(XPCS_param_file);
 
 [fitrange_time_iiT,pin_iiT,dp_iiT,qfitrange ] ...
     = XPCS_initialize_parameters.TTparameters_fit_singlerun(XPCS_param_file);
 
 
 [hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,...
-    tbin_allT,CWID_allT,N_degree_allT] =  XPCS_initialize_parameters.TTparameters_2timecorr_calc(XPCS_param_file);
+    tbin_allT,CWID_allT,N_degree_allT,maxpd,iii,jjj] =  XPCS_initialize_parameters.TTparameters_2timecorr_calc(XPCS_param_file);
 
 [POSITION,PAPERPOSITION,FONTSIZE,CMAX,CLIM,XCOLlabel,YROWlabel,...
                 AXISdet,DOCUclim,INFOstr,Numbsubplots] = XPCS_initialize_parameters.TTplot_parameters();
@@ -104,8 +104,8 @@ for iT = iTV
         Read_Allscans(iT).IIstruct = Singlescan_struct.IIstruct;
     end
 
-      
 
+    %%{
 for iT = iTV
     % Initialize ROIs:
     [Allscans(iT).ROIS_struct] = XPCS_read_data.TTsput_prepare_ROIS(iiT(iT),XCENV,YCENV,XWIDV,YWIDV,ymax);
@@ -123,10 +123,14 @@ for iT = iTV
     [Allscans(iT).IIbin_struct] = XPCS_analysis.bin_scans_in_time(Read_Allscans(iT),Allscans(iT),iT,tbin_allT,ImageJ,POINTSUMS);
     
     % Calculate 2 time correlaiont functions
-    flag_mean_or_poly = 'poly';
-    [Allscans(iT).CCN2_struct,Allscans(iT).IIbin_struct] = XPCS_analysis.calc_2time_corr(Allscans(iT).IIbin_struct,iT,N_degree_allT,flag_mean_or_poly);
-    
-    [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
+    %flag_mean_or_poly = 'poly';
+    %[Allscans(iT).CCN2_struct,Allscans(iT).IIbin_struct] = XPCS_analysis.calc_2time_corr(Allscans(iT).IIbin_struct,iT,N_degree_allT,flag_mean_or_poly);
+    %[Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
+
+    [Allscans(iT).CCN2_struct,Allscans(iT).IIbin_struct] = XPCS_analysis.calc_2time_corr_new(Allscans(iT).IIbin_struct,maxpd,iii,jjj );
+
+    [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg_new(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
+
     
     flag_row_col = 'row';
     num_col_or_row = 1;
@@ -202,10 +206,6 @@ DisplayFunctions_XPCS.display_growth_vs_power(PWV(iT),vel_struct,[1:numel(PWV(iT
 %power_vect = [10 20 50];
 %DisplayFunctions_XPCS.display_growth_vs_power(power_vect,vel_struct,[5 6 7],'900 C',800);
 
-%{
-for iT = 1%iTV
-    TTM_plot1; 
- end
 %}
 
 

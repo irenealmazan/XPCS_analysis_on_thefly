@@ -88,7 +88,7 @@ classdef XPCS_initialize_parameters
         
         function [TCV,nT,iiT,specfilenameM,SCNstrM,XCENV,YCENV,XWIDV,YWIDV,CROPV...
                 ymax,tminv,tmaxv,clrs, DXImin, ...
-                DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate] = TTparameters_singlerun(XPCS_initialize_file)
+                DXImax,NRY,PWV,flag_equil_or_growth,pilatus_flag,flagrotate,DOCU] = TTparameters_singlerun(XPCS_initialize_file)
             % Set parameters that varied for each scan
             
             eval(XPCS_initialize_file);
@@ -310,7 +310,7 @@ classdef XPCS_initialize_parameters
 
         
         function [hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,tbin_allT...
-                ,CWID_allT,N_degree_allT] = TTparameters_2timecorr_calc(XPCS_initialize_file)
+                ,CWID_allT,N_degree_allT,maxpd,iii,jjj] = TTparameters_2timecorr_calc(XPCS_initialize_file)
             % Set of parameters to calculate the area where the 2 times correlation
             % function is calculated:
             
@@ -440,6 +440,8 @@ classdef XPCS_initialize_parameters
             th_Bragg = 5.7225/2; % in [deg], taken from lab book 208, page 71
             
         end
+        
+        
         
     end
 end

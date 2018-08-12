@@ -98,6 +98,127 @@ classdef XPCS_analysis
             IIbin_struct.TITLEstuct = Read_Singlescan_struct.IIstruct.TITLEstuct;
         end
         
+        function [CCN2_struct,IIbin_struct] = calc_2time_corr_new(IIbin_struct,maxpd,iii,jjj )
+                     
+            IInormbb =  IIbin_struct.IInormbb;
+            
+            Nrs = size(IInormbb,1);
+            Ncs = size(IInormbb,2);
+            Ntb = size(IInormbb,3);
+            
+            % Smoothing method for getting average
+            % Use 2-D Savitzky-Golay smoothing filter
+            % For symmetric di or dj, use even pdi, pdj; next higher odd gives same
+            % answer
+            % these values should be moved to outer program
+            % need to optimize by overplotting smoothed function and data
+            %maxpd = 2; % determines maximum degree of smoothing polynomial
+            %iii = 5; % half-width of pixel range in del
+            %jjj = 5; % half-width of time steps
+            
+            di = [-iii:iii]; 
+            dj = [-jjj:jjj];
+            pdi = min(maxpd,2*iii);
+            pdj = min(maxpd,2*jjj);
+            filt = sgsf_2d(di,dj,pdi,pdj,0);
+            
+            Ncsc = Ncs - 2*iii;
+            Ntbc = Ntb - 2*jjj;
+            
+            IInormbb_ref = zeros(Nrs,Ncsc,Ntbc);
+            for kk = 1:Nrs
+                IInormbb_ref(kk,:,:) = conv2(squeeze(IInormbb(kk,:,:)),filt,'valid');
+            end
+            
+            IIbin_struct.IInormbb_ref = IInormbb_ref;
+            
+            IInormbbc = IInormbb(:,iii+[1:Ncsc],jjj+[1:Ntbc]);
+            %dI = IInormbbc - IInormbb_ref;
+            dlnI = IInormbbc./IInormbb_ref - 1;
+             
+            % Calc 2-time using time average mean, no ensemble
+            
+            %CCN2_struct.IIM2 = NaN*ones(Nrs,Ncsc,Ntbc,Ntbc);
+            CCN2_struct.CCN2 = NaN*ones(Nrs,Ncsc,Ntbc,Ntbc);
+            
+            for ii = 1:Ntbc
+                for jj = 1:ii
+                    %CCN2_struct.IIM2(:,:,ii,jj) = dI(:,:,ii).*dI(:,:,jj);
+                    %CCN2_struct.IIM2(:,:,jj,ii) = CCN2_struct.IIM2(:,:,ii,jj);
+                    CCN2_struct.CCN2(:,:,ii,jj) = dlnI(:,:,ii).*dlnI(:,:,jj);
+                    CCN2_struct.CCN2(:,:,jj,ii) = CCN2_struct.CCN2(:,:,ii,jj);
+                end
+            end
+            %IID2 = diag(IIM2);
+            %CC2 = IIM2./sqrt(IID2*IID2'); % Normalized to make diagonal unity
+            CCN2_struct.TITLEstuct = IIbin_struct.TITLEstuct;
+            
+            % updapting IIbin_struct:
+            IIbin_struct.Xamountb_ref = IIbin_struct.Xamountb(1:Ntbc);
+            IIbin_struct.IInormbbc = IInormbbc;
+            
+        end
+      
+         function CCN2avg_struct = from_CCN2V_to_CCN2avg_new(Single_scan_struct,iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg)
+            % this function averages the 2time correlation function in
+            % boxes of pixels and it is compatible with the new 2time
+            % correlation function 
+             
+            hwttr = hwttr_allT(iT);
+            hwttc = hwttc_allT(iT);
+            wrq = wrq_allT(iT);
+            wcq = wcq_allT(iT);
+            offsetcc = offsetcc_allT(iT);
+            offsetrc = offsetrc_allT(iT);
+            
+            
+            Nts = size(Single_scan_struct.CCN2_struct.CCN2,3);
+            Ncs = size(Single_scan_struct.CCN2_struct.CCN2,2);
+            Nrs = size(Single_scan_struct.CCN2_struct.CCN2,1);
+            
+            ittccen =1 + (Ncs - 1)/2 ;% index of col center
+            ittrcen = 1 + (Nrs - 1)/2; % index of row center        
+
+            CCN2V = Single_scan_struct.CCN2_struct.CCN2;
+            
+            Ncq = 2*wcq + 1;
+            Nrq = 2*wrq + 1;
+            for icq = 1:Ncq
+                offttc = (icq-wcq-1)*(2*hwttc+1)+ offsetcc;               
+                ittc = ittccen + offttc + [-hwttc:hwttc] ;
+               
+                for irq = 1:Nrq
+                    offttr = (irq - wrq - 1)*(2*hwttr+1)+ offsetrc;
+                    ittr = ittrcen + offttr + [-hwttr:hwttr];
+                    
+                    Qval_struct = XPCS_analysis.calculate_qval(ittccen,ittrcen,ittccen + offttc,ittrcen + offttr,D_ds,kvector,pixel_size,th_Bragg);
+
+                   
+                    CCN2avg_struct.scancq(icq).scanrq(irq).CCN2avg = squeeze(mean(mean(CCN2V(ittr,ittc,:,:),1),2));
+                    CCN2avg_struct.scancq(icq).scanrq(irq).timex = Single_scan_struct.IIbin_struct.Xamountb_ref;
+                    CCN2avg_struct.scancq(icq).scanrq(irq).TITLEstr2V = Single_scan_struct.IIbin_struct.TITLEstuct.TITLEstr2;
+                    CCN2avg_struct.scancq(icq).scanrq(irq).nu = Qval_struct.nu;
+                    CCN2avg_struct.scancq(icq).scanrq(irq).del = Qval_struct.del;
+                    CCN2avg_struct.qvector.nu(irq) = Qval_struct.nu;
+                    CCN2avg_struct.boxcenterrc.offttr(irq) = ittrcen + offttr;
+                end
+               CCN2avg_struct.qvector.del(icq) = Qval_struct.del;
+               CCN2avg_struct.boxcenterrc.offttc(icq) = ittccen + offttc;
+            end
+            CCN2avg_struct.Nts_Ncs_Nrs = [Nts Ncs Nrs];
+            CCN2avg_struct.Ncq_Nrq = [Ncq Nrq];
+            CCN2avg_struct.TITLEstruct = Single_scan_struct.CCN2_struct.TITLEstuct;
+            CCN2avg_struct.ittccen = ittccen ;
+            CCN2avg_struct.ittrcen = ittrcen ;
+            CCN2avg_struct.hwttr = hwttr;
+            CCN2avg_struct.hwttc = hwttc;
+            CCN2avg_struct.wrq = wrq;
+            CCN2avg_struct.wcq = wcq;
+            CCN2avg_struct.offsetcc = offsetcc;
+            CCN2avg_struct.offsetrc = offsetrc;
+        end
+        
+        
         function [CCN2_struct,IIbin_struct] = calc_2time_corr(IIbin_struct,iT,N_degree,flag_mean_or_poly)
                      
             IInormbb =  IIbin_struct.IInormbb;
