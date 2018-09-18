@@ -10,12 +10,12 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 1; 
+skip = 0; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the
-% 'growth' or 'power_series' data:
-flag_equil_or_growth = 'power_series';
+% 'growth' or 'power_series' or 'only_data' (for a test) data:
+flag_equil_or_growth = 'only_data';
 
 [plotsmooth,plotall,plotorig,plotnew,ixplotmin,ixplotmax,...
     pcolorCC2,plothalf,plotfull,plotcorrorig,plotcorrnew,...

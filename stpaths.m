@@ -4,18 +4,18 @@
 %% BASEroot is typically something that doesn't change except per computer
 moth_ROOT 		= '/home/mocvd/DATA';
 nisaba_ROOT 	= '/DATA/DATA';
-irene_ROOT    = '/Volumes/Irene_HD';%'./DATA';%   %<<< fix this ??? piece to point to Data in atoz
+irene_ROOT    = '/Volumes/srs/Data';%'/Volumes/Irene_HD';%'./DATA';%   %<<< fix this ??? piece to point to Data in atoz
 
 %% ENDroot is something that typically changes per run/experiment
 ENDroot 	= '2018/2018_03_sputTiO2_XPCS';  %%<< this allows some more pointing
 %ENDroot_atoz = '2017/Cycle_3/huber';
-ENDroot_atoz = 'Cycle_01_to_04/huber';
+ENDroot_atoz = '2018/Cycle_2/hexapod';%'Cycle_01_to_04/huber';
 
 %%%% Usually, just need to change here to go between computers
 %%%%		(helpful if have set up programs,, but want to run 
 %%%%		them on another computer)
-BASEroot 	= moth_ROOT;  %% <<< change here to irene_ROOT
-BASErootFLAG = 'moth_ROOT';
+BASEroot 	= irene_ROOT;%moth_ROOT;  %% <<< change here to irene_ROOT
+BASErootFLAG =  'irene_ROOT';%'moth_ROOT';
 
 %% If using beamline computers we don't have to change anything below
 %%		unfortunately, atoz keeps changing directory structure
@@ -36,9 +36,9 @@ else
 	DATAroot	= [BASEroot,filesep,ENDroot];  %='/Volume/???/Data/2017/Cycle_3/huber';
 	
 	%AREApath	= [DATAroot,filesep,'AREA'];
-    AREApath	= [DATAroot,filesep,'areadata'];
-	%DATApath	= [DATAroot,filesep,'SPEC'];
-    DATApath	= [DATAroot,filesep,'specdata'];
+    AREApath	= [DATAroot,filesep];%[DATAroot,filesep,'areadata'];
+	DATApath	= [DATAroot,filesep,'SPEC/data'];
+    %DATApath	= [DATAroot,filesep,'specdata'];
 	FLUORpath 	= [];% I don't know how they usually save fluor data if it is collected 
 	
 	IMAGEPILpath	= [AREApath];

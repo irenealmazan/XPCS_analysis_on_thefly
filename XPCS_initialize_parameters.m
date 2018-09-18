@@ -64,7 +64,7 @@ classdef XPCS_initialize_parameters
            
             % to feed the SCR function
             scanflag = 1;
-            imname = 'pil_';
+            imname = [];%'pil_';
             p_image = 'p_image';
             ending = '.tif';
             
@@ -192,6 +192,45 @@ classdef XPCS_initialize_parameters
                     %tmaxv = [1400;3500;2000;600];
                     
                     
+                case 'only_data'
+                    
+                     % temperatures in C
+                    TCV = [600]; % Equilibrium Thermocouple (new heater)
+                    
+                    % power in Watts
+                    PWV = [25];
+                    
+                    % Filenames
+                    specfilenameM = ['2018_0808_1'];
+                    
+                    % scans number (see lab book)
+                    SCNstrM = ['157']; % Equilibrium
+                    
+                    % Center pixels in between the CTRS
+                    %XCENV = [230;236;240;240];% del
+                    %YCENV = [120;118;120;120]; % nu
+                    
+                    XCENV = [232];% del
+                    YCENV = [118]; % nu
+                    
+                    
+                    
+                    % Width of the larger ROI
+                    XWIDV = [90];
+                    % Pilatus detector on sevchex arm (X is del and Y is nu)
+                    YWIDV = [25];
+                    
+                    
+                    % Positions of CTRs for ROIS
+                    ymax = [8];
+                    
+                    % Min and max on time range for delta-time average
+                    tminv = [100];
+                    tmaxv = [800];
+                    %tminv = [720; 2500;1110;200];
+                    %tmaxv = [1400;3500;2000;600];
+                    
+                    
             end
             
           
@@ -237,11 +276,11 @@ classdef XPCS_initialize_parameters
                         [1 1 1 0]*0.0001];
                     
                     % fit range for the tau time constant versus q
-                     qfitrange.nu = [1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2];
+                    qfitrange.nu = [1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2];
                     
                 case 'growth'
                     
@@ -265,21 +304,21 @@ classdef XPCS_initialize_parameters
                         [1 1 1 0]*0.0001;
                         [1 1 1 0]*0.0001];
                     
-                     qfitrange.nu = [1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2;
-                           1.5e-3 1.5e-2];
-                       
+                    qfitrange.nu = [1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2;
+                        1.5e-3 1.5e-2];
+                    
                 case 'power_series'
                     
                     % set the fitrange of the CC2NS in time for each temperature:
                     fitrange_time_iiT = [2/5;2/5;2/5;2/5];
                     
-                      
-                      pin_iiT = [0 1e-2 50 0;                        
+                    
+                    pin_iiT = [0 1e-2 50 0;
                         0 1e-2 50 0;
                         0 1e-2 50 0;
                         0 1e-2 50 0];
@@ -289,10 +328,24 @@ classdef XPCS_initialize_parameters
                         [1 1 1 0]*0.0001;
                         [1 1 1 0]*0.0001;];
                     
-                     qfitrange.nu = [2.5e-3 1.5e-2;
-                           2.5e-3 1.5e-2;
-                           2.5e-3 1.5e-2;
-                           2.5e-3 1.5e-2;];
+                    qfitrange.nu = [2.5e-3 1.5e-2;
+                        2.5e-3 1.5e-2;
+                        2.5e-3 1.5e-2;
+                        2.5e-3 1.5e-2;];
+                    
+                case 'only_data'
+                    
+                    % set the fitrange of the CC2NS in time for each temperature:
+                    fitrange_time_iiT = [2/3];
+                    
+                    pin_iiT = [0 1e-2 50 0];
+                    
+                    
+                    dp_iiT =  [[1 1 1 0]*0.0001];
+                    
+                    % fit range for the tau time constant versus q
+                    qfitrange.nu = [1.5e-3 1.5e-2];
+                    
                     
             end
             
@@ -375,6 +428,29 @@ classdef XPCS_initialize_parameters
                      % degree of the polynomial when we fit the IInormbb reference
                      % in the new way of analysis
                      N_degree_allT = [1 1 1 1];
+                     
+                 case 'only_data'
+                     
+                     
+                     hwttr_allT = [1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+                     hwttc_allT = [16]; % col half width (pixels)
+                     
+                     wrq_allT = [8];
+                     wcq_allT = [0];
+                     
+                     % tuning the center of the reciprocal space for the CC2avg
+                     % analysis (it can be larger than Ncs and Nrs respectively
+                     offsetcc_allT = [0];
+                     offsetrc_allT = [0];
+                     
+                     tbin_allT = [10]; % number of scans to bin together for 2-time calcs
+                     % Note sumrois_wNaN doesn't work with single-pixel ROIs
+                     
+                     CWID_allT = [0.3]; % Parameter for integer/half-integer ML integration
+                     
+                     % degree of the polynomial when we fit the IInormbb reference
+                     % in the new way of analysis
+                     N_degree_allT = [1];
                      
                      
              end

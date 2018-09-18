@@ -159,7 +159,7 @@ Flag_pixels = 1;
             % This function reads information about sdata and calculates
             % the normalizing factor
             
-            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hubmon'));
+            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hexmon'));
             MONave 	= mean(hubmon);
             %valve_p	= sdata.DATA(:,chan2col(sdata.collabels,'valve_p'));
             %valve_v	= sdata.DATA(:,chan2col(sdata.collabels,'valve_v'));
@@ -171,14 +171,18 @@ Flag_pixels = 1;
             % we do not use the stated hex100mA from run params
             hex100mA = MONave./mean(secperpoint);
             
-            Norm	= hex100mA .* secperpoint ./ hubmon(:,1);   % sometimes extra columns appear with hexmon
-
+            if size(hubmon,2) > 1
+                Norm	= hex100mA .* secperpoint ./ hubmon(:,1);   % sometimes extra columns appear with hexmon
+            else
+                Norm	= hex100mA .* secperpoint ./ hubmon;   % sometimes extra columns appear with hexmon                
+            end
         end 
         
         function [timeX,timestampX,lastframes, Xsteps,Xamount,SCNXLABEL] = calc_TimeX(sdata,timestampX,timestampX_flag,lastframes,Xstepcol,ImageJ)
             % Note the timestamp for the medipix is only to 1 second, not to milliseconds
             % So need to use the spec information for time.
-            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hubmon'));
+            %hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hubmon'));
+            hubmon	= sdata.DATA(:,chan2col(sdata.collabels,'hexmon'));
             timestampSpec	= sdata.DATA(:,chan2col(sdata.collabels,'Time'));
             timestampEpoch  = sdata.DATA(:,chan2col(sdata.collabels,'Epoch'));
             
