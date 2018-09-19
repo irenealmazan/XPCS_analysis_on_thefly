@@ -60,7 +60,13 @@ classdef XPCS_read_data
             
             % read data and calculate the normalization
             index_SCN = 1; % if multiple SCNs, write array
-            [II,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
+            [II_orig,sdata,timestampX,TITLEstuct] = XPCS_read_data.read_data_MPX3(specfilename,STR,SCNstr,index_SCN,DOCU0,DOCUscan);
+            
+            for jjj = 1:size(II_orig,3)
+               II_transp = squeeze(II_orig(:,:,jjj))';
+               II(:,:,jjj) = II_transp;
+            end
+            
             [Norm] = XPCS_read_data.calc_Norm(sdata);
             
             % read time
@@ -133,7 +139,7 @@ Flag_pixels = 1;
             SCNs = eval(SCNstr);
             SCNs = SCNs(index_SCN);
             
-            [NameMatrix,sdata] = make_imnames_2017_07(specfilename,SCNs,STR);
+            [NameMatrix,sdata] = make_imnames_2018_08(specfilename,SCNs,STR);
             FullNameArea = addnames2matrix([STR.AREApath,filesep],NameMatrix.fullfilenames);
             
             [II,timestampX] = load_MPX3(FullNameArea);
@@ -141,8 +147,8 @@ Flag_pixels = 1;
             % prepare the titles of the figures
             
             TITLEstuct.TITLEstr1 = char(...
-                [pfilename(specfilename),' #', SCNstr,' : ', sdata.SCNDATE],...
-                [sdata.SCNTYPE],...
+                [pfilename(specfilename),' #', SCNstr,' : ', sdata.SCNDATE{1}],...
+                [sdata.SCNTYPE{1}],...
                 [DOCU0,' ',DOCUscan]);
             
             TITLEstuct.TITLEstrshort = char(...
@@ -164,7 +170,7 @@ Flag_pixels = 1;
             %valve_p	= sdata.DATA(:,chan2col(sdata.collabels,'valve_p'));
             %valve_v	= sdata.DATA(:,chan2col(sdata.collabels,'valve_v'));
             %secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,'Seconds'));
-            secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,'Sec'));
+            secperpoint	= sdata.DATA(:,chan2col(sdata.collabels,'Seconds'));
            
             
             % for norm use mean hexmon - since slit size changes a lot

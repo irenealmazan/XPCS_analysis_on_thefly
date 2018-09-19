@@ -4,12 +4,13 @@
 %% BASEroot is typically something that doesn't change except per computer
 moth_ROOT 		= '/home/mocvd/DATA';
 nisaba_ROOT 	= '/DATA/DATA';
-irene_ROOT    = '/Volumes/srs/Data';%'/Volumes/Irene_HD';%'./DATA';%   %<<< fix this ??? piece to point to Data in atoz
+irene_ROOT    = '/Volumes/HD-PCFU3';%'./DATA';%   %<<< fix this ??? piece to point to Data in atoz
 
 %% ENDroot is something that typically changes per run/experiment
 ENDroot 	= '2018/2018_03_sputTiO2_XPCS';  %%<< this allows some more pointing
 %ENDroot_atoz = '2017/Cycle_3/huber';
-ENDroot_atoz = '2018/Cycle_2/hexapod';%'Cycle_01_to_04/huber';
+%ENDroot_atoz = '2018/Cycle_2/hexapod';%'Cycle_01_to_04/huber';
+ENDroot_atoz = 'hexapod';%'Cycle_01_to_04/huber';
 
 %%%% Usually, just need to change here to go between computers
 %%%%		(helpful if have set up programs,, but want to run 

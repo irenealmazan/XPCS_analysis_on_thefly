@@ -10,7 +10,7 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 0; 
+skip = 1; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the
@@ -71,8 +71,10 @@ if ~skip
                   Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
                   
             case 'power_series'
-                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
-
+                  Singlescan_namefile = ['Scan_power' SCNstrM(iT,:) '.mat'];
+                  
+            case 'only_data'
+                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
         end
       
         save(Singlescan_namefile,'Singlescan_struct','-v7.3');
@@ -96,6 +98,8 @@ else
                  
              case 'power_series'
                 Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
+             case 'only_data'
+                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
          end
         load(Singlescan_namefile);
         Read_Allscans(iT).IIstruct = Singlescan_struct.IIstruct;
@@ -199,7 +203,19 @@ DisplayFunctions_XPCS.display_growth_vs_power(PWV,vel_struct,[1:numel(PWV)], '90
 %DisplayFunctions_XPCS.display_growth_vs_power(power_vect,vel_struct,[5 6 7],'900 C',800);
 
 %{
-for iT = 2%iTV
+for iT = iTV
+ % Initialize ROIs:
+    [Allscans(iT).ROIS_struct] = XPCS_read_data.TTsput_prepare_ROIS(iiT(iT),XCENV,YCENV,XWIDV,YWIDV,ymax);
+    
+    
+    % Calculate Q-range
+     [Allscans(iT).Qval_struct] = XPCS_analysis.calculate_qval(XCENV(iT),YCENV(iT),[1:Read_Allscans(iT).IIstruct.Nc],[1:Read_Allscans(iT).IIstruct.Nr],D_ds,kvector,pixel_size,th_Bragg);
+
+    
+    
+    %Initialize the range of the 2 times correlation functions:
+    [Allscans(iT).itt_range_struct] = XPCS_analysis.prepare_subrange_for2corr(iT,Read_Allscans(iT).IIstruct.Xamount,XCENV,YCENV,XWIDV,YWIDV,tminv,tmaxv);
+    
     TTM_plot1; 
  end
 %}

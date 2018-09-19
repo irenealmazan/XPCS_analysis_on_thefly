@@ -195,30 +195,30 @@ classdef XPCS_initialize_parameters
                 case 'only_data'
                     
                      % temperatures in C
-                    TCV = [600]; % Equilibrium Thermocouple (new heater)
+                    TCV = [800]; % Equilibrium Thermocouple (new heater)
                     
                     % power in Watts
-                    PWV = [25];
+                    PWV = [0];
                     
                     % Filenames
-                    specfilenameM = ['2018_0808_1'];
+                    specfilenameM = ['2018_0813_1'];
                     
                     % scans number (see lab book)
-                    SCNstrM = ['157']; % Equilibrium
+                    SCNstrM = ['008']; % Equilibrium
                     
                     % Center pixels in between the CTRS
                     %XCENV = [230;236;240;240];% del
                     %YCENV = [120;118;120;120]; % nu
                     
-                    XCENV = [232];% del
-                    YCENV = [118]; % nu
+                    XCENV = [93];% del
+                    YCENV = [138]; % nu
                     
                     
                     
                     % Width of the larger ROI
-                    XWIDV = [90];
+                    XWIDV = [25];
                     % Pilatus detector on sevchex arm (X is del and Y is nu)
-                    YWIDV = [25];
+                    YWIDV = [45];
                     
                     
                     % Positions of CTRs for ROIS
@@ -432,8 +432,8 @@ classdef XPCS_initialize_parameters
                  case 'only_data'
                      
                      
-                     hwttr_allT = [1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
-                     hwttc_allT = [16]; % col half width (pixels)
+                     hwttr_allT = [0]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+                     hwttc_allT = [10]; % col half width (pixels)
                      
                      wrq_allT = [8];
                      wcq_allT = [0];
@@ -484,12 +484,13 @@ classdef XPCS_initialize_parameters
             
             % This function initializes the relevant parameters of the experiment:
             
-            % Sample to front detector distance (p 84, book 206)
-            D_ds = 4.03; % in [m]
-            kvector = 9.12e10; % in [1/m]
+            % Sample to front detector distance (p 117, book 208)
+            D_ds = 2.54; % in [m]
+            E_keV = 18; % in [keV]
+            kvector = (2*pi/12.398)*E_keV*1e10; % in [1/m]
             lambda = 2*pi/kvector; % in [m]
             pixel_size = 172e-6; % in [m]
-            th_Bragg = 4.8491/2; % in [deg], taken from lab book 206, page 55
+            th_Bragg = 4.7685/2; % in [deg], taken from lab book 208, page 117
             
         end
         
