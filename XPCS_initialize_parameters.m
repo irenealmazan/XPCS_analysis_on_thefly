@@ -204,7 +204,7 @@ classdef XPCS_initialize_parameters
                     specfilenameM = ['2018_0813_1'];
                     
                     % scans number (see lab book)
-                    SCNstrM = ['008']; % Equilibrium
+                    SCNstrM = ['021']; % Equilibrium
                     
                     % Center pixels in between the CTRS
                     %XCENV = [230;236;240;240];% del
@@ -225,8 +225,8 @@ classdef XPCS_initialize_parameters
                     ymax = [8];
                     
                     % Min and max on time range for delta-time average
-                    tminv = [100];
-                    tmaxv = [800];
+                    tminv = [500];
+                    tmaxv = [4000];
                     %tminv = [720; 2500;1110;200];
                     %tmaxv = [1400;3500;2000;600];
                     
@@ -432,7 +432,7 @@ classdef XPCS_initialize_parameters
                  case 'only_data'
                      
                      
-                     hwttr_allT = [0]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+                     hwttr_allT = [0.5]; % row half width (pixels)=> box of 2*hwttr+1 pixels
                      hwttc_allT = [10]; % col half width (pixels)
                      
                      wrq_allT = [8];

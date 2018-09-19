@@ -10,7 +10,7 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 1; 
+skip = 0; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the

@@ -161,11 +161,11 @@ classdef XPCS_analysis
             Nrq = 2*wrq + 1;
             for icq = 1:Ncq
                 offttc = (icq-wcq-1)*(2*hwttc+1)+ offsetcc;               
-                ittc = ittccen + offttc + [-hwttc:hwttc] ;
+                ittc = round(ittccen + offttc + [-hwttc:hwttc]) ;
                
                 for irq = 1:Nrq
                     offttr = (irq - wrq - 1)*(2*hwttr+1)+ offsetrc;
-                    ittr = ittrcen + offttr + [-hwttr:hwttr];
+                    ittr = round(ittrcen + offttr + [-hwttr:hwttr]);
                     
                     Qval_struct = XPCS_analysis.calculate_qval(ittccen,ittrcen,ittccen + offttc,ittrcen + offttr,D_ds,kvector,pixel_size,th_Bragg);
 
