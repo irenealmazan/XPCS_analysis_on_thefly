@@ -537,7 +537,7 @@ classdef DisplayFunctions_XPCS
             xccen = 1 + (Nc - 1)/2;
             yrcen = 1 + (Nr - 1)/2;
             
-            NumbSubplots = 4;
+            NumbSubplots = 1;
             counter_fig = 0;
             counter_pixel = 1;
             
@@ -590,11 +590,11 @@ classdef DisplayFunctions_XPCS
             end
             
         end
-        
+                      
         function display_CCN2avg(CCfunc,indexq,flag_row_or_col,fig_ini,AXISdet)
             
            
-            NumbSubplots = 4;
+            NumbSubplots = 1;
             counter_fig = 0;
             
             
@@ -628,7 +628,7 @@ classdef DisplayFunctions_XPCS
                             del = CCfunc(kk).scancq(iq).scanrq(indexq).del;
                     end
                     
-                    if mod(iq-1,4) == 0
+                    if mod(iq-1,NumbSubplots) == 0
                         fig_num = fig_ini+counter_fig;
                         fig_h = figure(fig_num);
                         clf;
@@ -666,7 +666,7 @@ classdef DisplayFunctions_XPCS
         function CCfunc = display_CCN2S(CCfunc,indexq,flag_row_or_col,fig_ini,plotrange)
             
           
-            NumbSubplots = 4;
+            NumbSubplots = 1;
             counter_fig = 0;
            
             
@@ -770,10 +770,161 @@ classdef DisplayFunctions_XPCS
             
         end
         
+        
+       function CCfunc = display_CCN2S_CCN2avg(Singlescans,indexq,flag_row_or_col,fig_ini,plotrange,AXISdet)
+            
+          
+            NumbSubplots = 1;
+            counter_fig = 0;
+            
+            CCfunc = Singlescans.CCN2S_struct;
+            CCfunc_avg = Singlescans.CCN2avg_struct;
+           
+            
+            for kk = 1:numel(CCfunc)
+                
+                switch flag_row_or_col
+                    
+                    case 'row'
+                        qtolook = [ 1:CCfunc(kk).Ncq_Nrq(2)];
+                    case 'col'
+                        qtolook = [ 1:CCfunc(kk).Ncq_Nrq(1)];
+                    otherwise
+                        disp('please select rows or cols')
+                        return;
+                end
+                
+                
+                for iq = qtolook
+                    
+                    if mod(iq-1,NumbSubplots) == 0
+                        fig_num = fig_ini+counter_fig;
+                        figure(fig_num);
+                        clf;
+                        counter_fig = counter_fig + 1;
+                    end
+                    
+                    switch flag_row_or_col
+                        
+                        case 'row'
+                            time_1D = CCfunc(kk).scancq(indexq).scanrq(iq).time_1D;
+                            CCNdtV = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV;
+                            nu = CCfunc(kk).scancq(indexq).scanrq(iq).nu;
+                            del = CCfunc(kk).scancq(indexq).scanrq(iq).del;
+                            
+                            if isfield(CCfunc(kk).scancq(indexq).scanrq(iq),'CCNdtV_fit')
+                                PLOTFITFLAG = 1;
+                                xfit  = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV_fit.x;
+                                fitfunc = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV_fit.fitfunc;
+                                plegend = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV_fit.plegend;
+                                pout = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV_fit.pout;
+                            else
+                                
+                                PLOTFITFLAG = 0;
+                            end
+                            
+                            timex = CCfunc_avg(kk).scancq(indexq).scanrq(iq).timex;
+                            CCN2avg = CCfunc_avg(kk).scancq(indexq).scanrq(iq).CCN2avg;
+                            nu = CCfunc_avg(kk).scancq(indexq).scanrq(iq).nu;
+                            del = CCfunc_avg(kk).scancq(indexq).scanrq(iq).del;
+                            
+                        case 'col'
+                            time_1D = CCfunc(kk).scancq(iq).scanrq(indexq).time_1D;
+                            CCNdtV = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV;
+                            nu = CCfunc(kk).scancq(iq).scanrq(indexq).nu;
+                            del = CCfunc(kk).scancq(iq).scanrq(indexq).del;
+                            
+                            if isfield(CCfunc(kk).scancq(iq).scanrq(indexq),'CCNdtV_fit')
+                                PLOTFITFLAG = 1;
+                                xfit  = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV_fit.x;
+                                fitfunc = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV_fit.fitfunc;
+                                plegend = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV_fit.plegend;
+                                pout = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV_fit.pout;
+                            else
+                                PLOTFITFLAG = 0;
+                            end
+                            
+                            
+                            timex = CCfunc_avg(kk).scancq(iq).scanrq(indexq).timex;
+                            CCN2avg = CCfunc_avg(kk).scancq(iq).scanrq(indexq).CCN2avg;
+                            nu = CCfunc_avg(kk).scancq(iq).scanrq(indexq).nu;
+                            del = CCfunc_avg(kk).scancq(iq).scanrq(indexq).del;
+                    end
+                    
+                    
+                    %subh = subplot(sqrt(NumbSubplots),sqrt(NumbSubplots),iq-NumbSubplots*(counter_fig-1));
+                    subh1 = subplot(1,2,1);
+                    pcolor(timex,timex,CCN2avg);
+                    
+                    
+                    if ~isempty(AXISdet)
+                        Axislim_vect = AXISdet;
+                    else
+                        Axislim_vect = [min(timex) max(timex) min(timex) max(timex)];
+                    end
+            
+                    
+                    Namestr = ['2times corr func between ' num2str(1+(counter_fig-1)*NumbSubplots) ' and ' num2str((counter_fig)*NumbSubplots) CCfunc.TITLEstruct.TITLEstr2];                   
+                    Titlestr = ['q\_nu = ' num2str(nu,'%10.3e') '1/A ; q\_del = ' num2str(del,'%10.3e') '1/\AA'];
+                    XLabelstr = 'Time (s)';
+                    YLabelstr = 'Time (s)';
+                    Shading_mode = ['interp'];
+                    Colorvector = [];
+                    Colorbarflag = 1;
+                    Axisimagestr = 'square';
+                    flagPrettyPlot = 0;
+                    
+                    DisplayFunctions_XPCS.display_style(subh1,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr );
+
+                    
+                    
+                    subh = subplot(1,2,2);
+                    plot(time_1D(plotrange),CCNdtV(plotrange));
+                    
+                                        
+                    if  PLOTFITFLAG
+                        
+                        hold on;
+                        plot(xfit,fitfunc,'r');
+                        param_str = [];
+                        for pp = 1:numel(plegend) param_str = [param_str ' ' plegend(pp).ptitle]; end
+                        celltitle = {'nu = ' num2str(nu,'%10.3e') ' (1/A) '  ' del = ' num2str(del,'%10.3e') ' in 1/A'  param_str  ' = ' num2str(pout','%10.3e')};
+                        ht = title({[celltitle{1:6}] [celltitle{7:8}] [celltitle{9:end}]});
+                    else 
+                        ht = title(['nu = ' num2str(nu,'%10.3e') , '  (1/A) del = ' num2str(del,'%10.3e') ' in 1/A']);
+                    
+                    end
+                    
+          
+                    
+                    
+                    
+                    
+                    Namestr =  ['Fitted functions for irq between ' num2str(1+(counter_fig-1)*NumbSubplots) ' and ' num2str((counter_fig)*NumbSubplots) CCfunc.TITLEstruct.TITLEstr2];                   
+                    Titlestr = [''];
+                    XLabelstr = 'Time Delta (s)';
+                    YLabelstr = 'Correlation';
+                    Shading_mode = ['interp'];
+                    Colorvector = [];
+                    Colorbarflag = 0;
+                    Axisimagestr = 'square';
+                    flagPrettyPlot = 0;
+                    Axislim_vect = [min(time_1D(plotrange)) max(time_1D(plotrange)) min(CCNdtV(plotrange)) max(CCNdtV(plotrange))];
+                    DisplayFunctions_XPCS.display_style(subh,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
+                    
+                end
+            end
+        
+        
+      
+            
+        end
+        
+        
         function [pout,sigma] = display_fit_result(CCN2S_struct,indexq,flag_row_or_col,figh)
             
             
-            fighandle = figure(figh);
+           
             
             switch flag_row_or_col
                 
@@ -814,8 +965,8 @@ classdef DisplayFunctions_XPCS
             
             for pp=1:numel(CCNdtV_fit.pout)
                 
-                h = subplot(1,numel(CCNdtV_fit.pout),pp);
-                
+                %h = subplot(1,numel(CCNdtV_fit.pout),pp);
+                fighandle = figure(figh+pp);
                 errorbar(qvector,pout(:,pp),sigma(:,pp),'ob');
                 drawnow;
                 
@@ -851,7 +1002,7 @@ classdef DisplayFunctions_XPCS
                 end
                 
                 
-                DisplayFunctions_XPCS.display_style(h,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
+                DisplayFunctions_XPCS.display_style(fighandle,'figure',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
                 
             end
             

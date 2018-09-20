@@ -122,13 +122,14 @@ classdef XPCS_analysis
              
             % Calc 2-time using time average mean, no ensemble
             
-            CCN2_struct.IIM2 = NaN*ones(Nrs,Ncs,Ntb,Ntb);
+            %CCN2_struct.IIM2 = NaN*ones(Nrs,Ncs,Ntb,Ntb);
             CCN2_struct.CCN2 = NaN*ones(Nrs,Ncs,Ntb,Ntb);
             
             for ii = 1:Ntb
                 for jj = 1:ii
-                    CCN2_struct.IIM2(:,:,ii,jj) = dI(:,:,ii).*dI(:,:,jj);
-                    CCN2_struct.IIM2(:,:,jj,ii) = CCN2_struct.IIM2(:,:,ii,jj);
+                    %CCN2_struct.IIM2(:,:,ii,jj) = dI(:,:,ii).*dI(:,:,jj);
+                    %CCN2_struct.IIM2(:,:,jj,ii) = CCN2_struct.IIM2(:,:,ii,jj);
+                   
                     CCN2_struct.CCN2(:,:,ii,jj) = dlnI(:,:,ii).*dlnI(:,:,jj);
                     CCN2_struct.CCN2(:,:,jj,ii) = CCN2_struct.CCN2(:,:,ii,jj);
                 end

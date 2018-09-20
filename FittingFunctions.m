@@ -109,8 +109,8 @@ classdef FittingFunctions
           
            
            y = p(1) + p(2).*exp(-x./p(3)) +p(4).*x;
-           legendstruct(1).ptitle = 'Background';
-           legendstruct(2).ptitle = 'Intensity';
+           legendstruct(1).ptitle = 'Back.';
+           legendstruct(2).ptitle = 'Contrast';
            legendstruct(3).ptitle = 'tau (sec)';
            legendstruct(4).ptitle = 'slope (1/sec)';
            
@@ -170,7 +170,7 @@ classdef FittingFunctions
           
            
            y = p(1)./x;
-           legendstruct(1).ptitle = 'Intensity';
+           legendstruct(1).ptitle = 'Contrast';
            
            
            

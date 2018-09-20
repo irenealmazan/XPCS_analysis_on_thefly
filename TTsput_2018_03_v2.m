@@ -10,7 +10,7 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 0; 
+skip = 1; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the
@@ -50,9 +50,9 @@ iTV = [1:numel(iiT)];
 %_._._._._._._._._._._._._._._._._._._._._._._._._.._._._._._._._._._.._.._._._______________________
 if ~skip
     disp('Recalculating 2-time from experimental datasets.');
-    
+    clear Read_Allscans;
+
     for iT = iTV
-        clear Read_Allscans;
         % read data
         
          warning('off','all');
@@ -136,7 +136,7 @@ for iT = iTV
     DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
 
      % plot the CTR images in pixels:
-    DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet);
+    %DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet);
     QvalFlag = 0;
     fignum = 90;
     DisplayFunctions_XPCS.display_IInormb(Allscans(iT).IIbin_struct,Allscans(iT).IIbin_struct.IInormbb,'Log 10 binned IInormb',QvalFlag,fignum+iT,ImageJ,SINGLE,XCOLlabel,YROWlabel,AXISdet,INFOstr,D_ds,kvector,pixel_size,th_Bragg);
@@ -151,12 +151,12 @@ for iT = iTV
     
     [Allscans(iT).CCN2S_struct] = XPCS_analysis.from_CCN2avg_to_CCN2S(Allscans(iT).CCN2avg_struct);
     
-    [Allscans(iT).CCN2S_struct] = XPCS_analysis.fit_CCN2S_with_leasqr(Allscans(iT).CCN2S_struct,iT,pin_iiT,dp_iiT,'FittingFunctions.CCN2single_fit',[2:1:round(fitrange_time_iiT(iT)*Allscans(iT).IIbin_struct.Ntb)],num_col_or_row,flag_row_col,200);
+    [Allscans(iT).CCN2S_struct] = XPCS_analysis.fit_CCN2S_with_leasqr(Allscans(iT).CCN2S_struct,iT,pin_iiT,dp_iiT,'FittingFunctions.CCN2single_fit',[3:1:round(fitrange_time_iiT(iT)*Allscans(iT).IIbin_struct.Ntb)],num_col_or_row,flag_row_col,200);
     
     figh = 400+iT+num_col_or_row;
     [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
     
-    DisplayFunctions_XPCS.display_CCN2S(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb]);
+    DisplayFunctions_XPCS.display_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
     
 end
 
