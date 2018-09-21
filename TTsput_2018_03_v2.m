@@ -10,12 +10,12 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 0; 
+skip = 1; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the
 % 'growth' or 'power_series' or 'only_data' (for a test) data:
-flag_equil_or_growth = 'power_series';
+flag_equil_or_growth = 'only_data';
 
 [plotsmooth,plotall,plotorig,plotnew,ixplotmin,ixplotmax,...
     pcolorCC2,plothalf,plotfull,plotcorrorig,plotcorrnew,...
@@ -50,7 +50,7 @@ iTV = [1:numel(iiT)];
 %_._._._._._._._._._._._._._._._._._._._._._._._._.._._._._._._._._._.._.._._._______________________
 if ~skip
     disp('Recalculating 2-time from experimental datasets.');
-    clear Read_Allscans;
+    %clear Read_Allscans;
 
     for iT = iTV
         % read data
@@ -63,20 +63,7 @@ if ~skip
         %Save the data
         Singlescan_struct = Read_Allscans(iT);
         
-        switch flag_equil_or_growth
-            
-            case 'equilibrium'
-                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
-            case 'growth'
-                  Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
-                  
-            case 'power_series'
-                  Singlescan_namefile = ['Scan_power' SCNstrM(iT,:) '.mat'];
-                  
-            case 'only_data'
-                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
-        end
-      
+        Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
         save(Singlescan_namefile,'Singlescan_struct','-v7.3');
         %}
         
@@ -85,22 +72,11 @@ if ~skip
     
 else
     
-    disp('Loading previously calculated 2-time analysis.');
+    disp('Loading previously stored scans.');
     for iT = iTV
         
          SCNstrM_numer = str2num(SCNstrM(iT,:)) ;  
-         switch flag_equil_or_growth
-             
-             case 'equilibrium'
-                 Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
-             case 'growth'
-                 Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
-                 
-             case 'power_series'
-                Singlescan_namefile = ['Scan_growth' SCNstrM(iT,:) '.mat'];
-             case 'only_data'
-                  Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
-         end
+        Singlescan_namefile = ['Scan' SCNstrM(iT,:) '.mat'];
         load(Singlescan_namefile);
         Read_Allscans(iT).IIstruct = Singlescan_struct.IIstruct;
     end
@@ -108,7 +84,7 @@ else
 end
       
 
-for iT = 5%iTV
+for iT = iTV
     % Initialize ROIs:
     [Allscans(iT).ROIS_struct] = XPCS_read_data.TTsput_prepare_ROIS(iiT(iT),XCENV,YCENV,XWIDV,YWIDV,ymax);
     
@@ -131,9 +107,9 @@ for iT = 5%iTV
     [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
     
     flag_row_col = 'row';
-    num_col_or_row = 1;
+    num_col_or_row = 14;
     
-    DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
+    %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
 
      % plot the CTR images in pixels:
     %DisplayFunctions_XPCS.display_CCN2avg(Allscans(iT).CCN2avg_struct,num_col_or_row,flag_row_col,40+iT+num_col_or_row,AXISdet);
@@ -154,7 +130,7 @@ for iT = 5%iTV
     [Allscans(iT).CCN2S_struct] = XPCS_analysis.fit_CCN2S_with_leasqr(Allscans(iT).CCN2S_struct,iT,pin_iiT,dp_iiT,'FittingFunctions.CCN2single_fit',[3:1:round(fitrange_time_iiT(iT)*Allscans(iT).IIbin_struct.Ntb)],num_col_or_row,flag_row_col,200);
     
     figh = 400+iT+num_col_or_row;
-    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
+    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,[1:numel(Allscans(iT).CCN2S_struct.scancq(num_col_or_row).scanrq(1).CCNdtV_fit.pout)-1],figh);
     
     DisplayFunctions_XPCS.display_IIbinstruct_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
     
@@ -165,14 +141,14 @@ end
 
  % Fit the taus at different temperatures 
 pp_index = 3;
-[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,1,'row',601);
+[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,num_col_or_row,flag_row_col,601);
 
 % fit pout(3,:)= tau to a power law 1/x
 
 for iT = iTV
     
-     figh = 400+iT+num_col_or_row;
-    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
+    figh = 400+iT+num_col_or_row;
+    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,[3],figh);
    
     
     figure;

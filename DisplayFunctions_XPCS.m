@@ -972,7 +972,7 @@ classdef DisplayFunctions_XPCS
         end
         
         
-        function [pout,sigma] = display_fit_result(CCN2S_struct,indexq,flag_row_or_col,figh)
+        function [pout,sigma] = display_fit_result(CCN2S_struct,indexq,flag_row_or_col,ppvector,figh)
             
             
            
@@ -1014,21 +1014,21 @@ classdef DisplayFunctions_XPCS
                 end
             end
             
-            for pp=1:numel(CCNdtV_fit.pout)
+            for pp=ppvector%1:numel(CCNdtV_fit.pout)
                 
                 %h = subplot(1,numel(CCNdtV_fit.pout),pp);
                 fighandle = figure(figh+pp);
                 errorbar(qvector,pout(:,pp),sigma(:,pp),'ob');
                 drawnow;
                 
-                Namestr =  [''];
+                Namestr =  [CCN2S_struct.TITLEstruct.TITLEstr2];
                 Titlestr = [char(CCNdtV_fit.plegend(pp).ptitle)];
                 
                 YLabelstr = [char(CCNdtV_fit.plegend(pp).ptitle)];
                 Shading_mode = [''];
                 Colorvector = [];
                 Colorbarflag = 0;
-                Axisimagestr = '';
+                Axisimagestr = 'square';
                 flagPrettyPlot = 0;
                 
                 switch flag_row_or_col
@@ -1057,7 +1057,7 @@ classdef DisplayFunctions_XPCS
                 
             end
             
-            set(gcf,'Name',Namefig);
+            %set(gcf,'Name',Namefig);
             
 %             
         end
