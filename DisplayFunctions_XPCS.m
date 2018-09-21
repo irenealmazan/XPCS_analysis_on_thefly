@@ -771,7 +771,7 @@ classdef DisplayFunctions_XPCS
         end
         
         
-       function CCfunc = display_CCN2S_CCN2avg(Singlescans,indexq,flag_row_or_col,fig_ini,plotrange,AXISdet)
+       function CCfunc = display_IIbinstruct_CCN2S_CCN2avg(Singlescans,indexq,flag_row_or_col,fig_ini,plotrange,AXISdet)
             
           
             NumbSubplots = 1;
@@ -779,6 +779,19 @@ classdef DisplayFunctions_XPCS
             
             CCfunc = Singlescans.CCN2S_struct;
             CCfunc_avg = Singlescans.CCN2avg_struct;
+            IIbin_struct = Singlescans.IIbin_struct;
+            
+            IInormbb = IIbin_struct.IInormbb;
+            Xamountb = IIbin_struct.Xamountb;
+            IInormbb_ref = IIbin_struct.IInormbb_ref;
+            
+              
+            if isfield(IIbin_struct,'N_degree')
+                Ndeg = IIbin_struct.N_degree;
+            else
+                Ndeg = 0;
+            end
+            
            
             
             for kk = 1:numel(CCfunc)
@@ -807,6 +820,9 @@ classdef DisplayFunctions_XPCS
                     switch flag_row_or_col
                         
                         case 'row'
+                            irs = CCfunc_avg.boxcenterrc.offttr(iq);
+                            ics = CCfunc_avg.boxcenterrc.offttc(indexq);
+                            
                             time_1D = CCfunc(kk).scancq(indexq).scanrq(iq).time_1D;
                             CCNdtV = CCfunc(kk).scancq(indexq).scanrq(iq).CCNdtV;
                             nu = CCfunc(kk).scancq(indexq).scanrq(iq).nu;
@@ -829,6 +845,10 @@ classdef DisplayFunctions_XPCS
                             del = CCfunc_avg(kk).scancq(indexq).scanrq(iq).del;
                             
                         case 'col'
+                            irs = CCfunc_avg.boxcenterrc.offttr(indexq);
+                            ics = CCfunc_avg.boxcenterrc.offttc(iq);
+                            
+                            
                             time_1D = CCfunc(kk).scancq(iq).scanrq(indexq).time_1D;
                             CCNdtV = CCfunc(kk).scancq(iq).scanrq(indexq).CCNdtV;
                             nu = CCfunc(kk).scancq(iq).scanrq(indexq).nu;
@@ -851,9 +871,38 @@ classdef DisplayFunctions_XPCS
                             del = CCfunc_avg(kk).scancq(iq).scanrq(indexq).del;
                     end
                     
+                    subh1 = subplot(1,3,1);
+                    hold on;
+                    plot(Xamountb',squeeze(IInormbb(irs,ics,:)),'ob');
+                    plot(Xamountb',squeeze(IInormbb_ref(irs,ics,:) ),'k','LineWidth',3.0)
+                    plot(Xamountb',mean(IInormbb(irs,ics,:))*ones(numel(Xamountb),1),'r','LineWidth',3.0)
+            
+                    %legend('IInormbb(ics,irs,:)',['Fit IInormbb to poly N = ' num2str(Ndeg)],'mean(IInormbb,3)');
+                    
+                    
+                    if ~isempty(AXISdet)
+                        Axislim_vect = AXISdet;
+                    else
+                        Axislim_vect = [min(Xamountb) max(Xamountb) min(squeeze(IInormbb(irs,ics,:))) max(squeeze(IInormbb(irs,ics,:)))];
+                    end
+            
+                    
+                    Namestr = ['Pixel intensity vs time ' num2str(1+(counter_fig-1)*NumbSubplots) ' and ' num2str((counter_fig)*NumbSubplots) IIbin_struct.TITLEstuct.TITLEstr2];                   
+                    Titlestr_1line = {'ics = ' num2str(ics) ' del = ' num2str(del,'%10.3e') ' (1/A) '  ' irs = ' num2str(irs) ' nu = ' num2str(nu,'%10.3e') ' (1/A)'};
+                    Titlestr = {[Titlestr_1line{1:5}] [Titlestr_1line{6:end}]};
+                    XLabelstr = 'Time/Xamountb (s)';
+                    YLabelstr = 'Intensity';
+                    Shading_mode = [''];
+                    Colorvector = [];
+                    Colorbarflag = 0;
+                    Axisimagestr = 'square';
+                    flagPrettyPlot = 0;
+                    
+                    DisplayFunctions_XPCS.display_style(subh1,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr );
+
                     
                     %subh = subplot(sqrt(NumbSubplots),sqrt(NumbSubplots),iq-NumbSubplots*(counter_fig-1));
-                    subh1 = subplot(1,2,1);
+                    subh2 = subplot(1,3,2);
                     pcolor(timex,timex,CCN2avg);
                     
                     
@@ -874,11 +923,11 @@ classdef DisplayFunctions_XPCS
                     Axisimagestr = 'square';
                     flagPrettyPlot = 0;
                     
-                    DisplayFunctions_XPCS.display_style(subh1,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr );
+                    DisplayFunctions_XPCS.display_style(subh2,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr );
 
                     
                     
-                    subh = subplot(1,2,2);
+                    subh3 = subplot(1,3,3);
                     plot(time_1D(plotrange),CCNdtV(plotrange));
                     
                                         
@@ -910,8 +959,10 @@ classdef DisplayFunctions_XPCS
                     Axisimagestr = 'square';
                     flagPrettyPlot = 0;
                     Axislim_vect = [min(time_1D(plotrange)) max(time_1D(plotrange)) min(CCNdtV(plotrange)) max(CCNdtV(plotrange))];
-                    DisplayFunctions_XPCS.display_style(subh,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
+                    DisplayFunctions_XPCS.display_style(subh3,'subplot',Titlestr,Namestr,XLabelstr,YLabelstr,Shading_mode,Axislim_vect,flagPrettyPlot,Colorvector,Colorbarflag,Axisimagestr )
                     
+                 
+                    set(gcf,'pos',[10 10 900 600]);
                 end
             end
         

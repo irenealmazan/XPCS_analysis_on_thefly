@@ -10,12 +10,12 @@
 %0 means read again the data; 
 %1 means read previously saved data;
 
-skip = 1; 
+skip = 0; 
 
 
 % General flag to initialize the parameters for the 'equilibrium' or the
 % 'growth' or 'power_series' or 'only_data' (for a test) data:
-flag_equil_or_growth = 'only_data';
+flag_equil_or_growth = 'power_series';
 
 [plotsmooth,plotall,plotorig,plotnew,ixplotmin,ixplotmax,...
     pcolorCC2,plothalf,plotfull,plotcorrorig,plotcorrnew,...
@@ -108,7 +108,7 @@ else
 end
       
 
-for iT = iTV
+for iT = 5%iTV
     % Initialize ROIs:
     [Allscans(iT).ROIS_struct] = XPCS_read_data.TTsput_prepare_ROIS(iiT(iT),XCENV,YCENV,XWIDV,YWIDV,ymax);
     
@@ -156,7 +156,7 @@ for iT = iTV
     figh = 400+iT+num_col_or_row;
     [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
     
-    DisplayFunctions_XPCS.display_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
+    DisplayFunctions_XPCS.display_IIbinstruct_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
     
 end
 
@@ -170,6 +170,11 @@ pp_index = 3;
 % fit pout(3,:)= tau to a power law 1/x
 
 for iT = iTV
+    
+     figh = 400+iT+num_col_or_row;
+    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,figh);
+   
+    
     figure;
    
     pout_struct(iT).pout_fit = XPCS_analysis.fit_tau_with_leasqr(pout_struct(iT),'FittingFunctions.powerlaw_tau',qfitrange.nu);
@@ -195,7 +200,7 @@ island_size = 2e3; % in Angstroms
 island_size = 2e3; % in Angstroms
 %[vel_struct] = DisplayFunctions_XPCS.display_vel_vs_temp(PWV,pout_struct,'Tau vs power',island_size,800);
 
-DisplayFunctions_XPCS.display_growth_vs_power(PWV,vel_struct,[1:numel(PWV)], '900 C',1000)
+DisplayFunctions_XPCS.display_growth_vs_power(PWV,vel_struct,[1:numel(PWV)], '800 C',1000)
 
 
 % display the velocity vs the power

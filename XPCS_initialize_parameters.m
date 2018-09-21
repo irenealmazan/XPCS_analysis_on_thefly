@@ -142,7 +142,7 @@ classdef XPCS_initialize_parameters
                     % Pilatus detector on sevchex arm (X is del and Y is nu)
                     YWIDV = [30;30;30;30;30;30;30];
                     
-                    % Positions of CTRs for ROIS
+                    % Offset of two of the ROIS around the Positions of CTRs
                     ymax = [8;8;8;8;8;8;8];
                     
                     % Min and max on time range for delta-time average
@@ -152,23 +152,23 @@ classdef XPCS_initialize_parameters
                 case 'power_series'
                     
                     % temperatures in C
-                    TCV = [900;900;900;900]; % Equilibrium Thermocouple (new heater)
+                    TCV = [800;800;800;800;800]; % Equilibrium Thermocouple (new heater)
                     
                     % power in Watts
-                    PWV = [0; 10 ; 20 ; 50];
+                    PWV = [0; 10 ; 15 ; 15 ; 25];
                     
                     % Filenames
-                    specfilenameM = ['2018_0318_1';'2018_0318_1';'2018_0318_1';'2018_0318_1'];
+                    specfilenameM = ['2018_0813_1';'2018_0813_1';'2018_0813_1';'2018_0813_1';'2018_0813_1'];
                     
                     % scans number (see lab book)
-                    SCNstrM = ['059';'073';'102';'103']; % Equilibrium
+                    SCNstrM = ['008';'018';'012';'016';'011']; % Equilibrium
                     
                     % Center pixels in between the CTRS
                     %XCENV = [230;236;240;240];% del
                     %YCENV = [120;118;120;120]; % nu
                     
-                    XCENV = [232;233;240;240];% del
-                    YCENV = [118;119;120;120]; % nu
+                    XCENV = [93;93;93;93;93];% del
+                    YCENV = [138;138;138;138;138]; % nu
                     
                     
                     % Width of the larger ROI
@@ -177,17 +177,17 @@ classdef XPCS_initialize_parameters
                     %YWIDV = [30;30;30;30];
                     
                     % Width of the larger ROI
-                    XWIDV = [90;90;90;90];
+                    XWIDV = [25;25;25;25;25];
                     % Pilatus detector on sevchex arm (X is del and Y is nu)
-                    YWIDV = [25;25;25;25];
+                    YWIDV = [45;45;45;45;45];
                     
                     
-                    % Positions of CTRs for ROIS
-                    ymax = [8;8;8;8];
+                    % Offset of two of the ROIS around the Positions of CTRs
+                    ymax = [8;8;8;8;8];
                     
                     % Min and max on time range for delta-time average
-                    tminv = [720; 2500; 1110;200];
-                    tmaxv = [1400;3500;2000;600];
+                    tminv = [100; 100; 100;100;100];
+                    tmaxv = [4000;4000;4000;4000;4000];
                     %tminv = [720; 2500;1110;200];
                     %tmaxv = [1400;3500;2000;600];
                     
@@ -201,10 +201,10 @@ classdef XPCS_initialize_parameters
                     PWV = [0;10];
                     
                     % Filenames
-                    specfilenameM = ['2018_0813_1';'2018_0813_1'];
+                    specfilenameM = ['2018_0813_1'];
                     
                     % scans number (see lab book)
-                    SCNstrM = ['021';'018']; % Equilibrium
+                    SCNstrM = ['008']; % Equilibrium
                     
                     % Center pixels in between the CTRS
                     %XCENV = [230;236;240;240];% del
@@ -221,7 +221,7 @@ classdef XPCS_initialize_parameters
                     YWIDV = [45;45];
                     
                     
-                    % Positions of CTRs for ROIS
+                    % Offset of two of the ROIS around the Positions of CTRs
                     ymax = [8;8];
                     
                     % Min and max on time range for delta-time average
@@ -315,23 +315,26 @@ classdef XPCS_initialize_parameters
                 case 'power_series'
                     
                     % set the fitrange of the CC2NS in time for each temperature:
-                    fitrange_time_iiT = [2/5;2/5;2/5;2/5];
+                    fitrange_time_iiT = [1/2;1/2;1/2;1/2;1/2];
                     
                     
-                    pin_iiT = [0 1e-2 50 0;
-                        0 1e-2 50 0;
-                        0 1e-2 50 0;
-                        0 1e-2 50 0];
+                    pin_iiT = [0 1e-3 500 0;
+                        0 1e-3 500 0;
+                        0 1e-3 500 0;
+                        0 1e-3 500 0;
+                        0 1e-3 500 0];
                     
                     dp_iiT =  [[1 1 1 0]*0.0001;
                         [1 1 1 0]*0.0001;
                         [1 1 1 0]*0.0001;
-                        [1 1 1 0]*0.0001;];
+                        [1 1 1 0]*0.0001;
+                        [1 1 1 0]*0.0001];
                     
                     qfitrange.nu = [2.5e-3 1.5e-2;
                         2.5e-3 1.5e-2;
                         2.5e-3 1.5e-2;
-                        2.5e-3 1.5e-2;];
+                        2.5e-3 1.5e-2;
+                        2.5e-3 1.5e-2];
                     
                 case 'only_data'
                     
@@ -411,26 +414,27 @@ classdef XPCS_initialize_parameters
                      
                  case 'power_series'
                      
-                     hwttr_allT = [1 1 1 1]; % row half width (pixels)=> box of 2*hwttr+1 pixels
-                     hwttc_allT = [32 32 32 32]; % col half width (pixels)
+                     hwttr_allT = [0 0 0 0 0]; % row half width (pixels)=> box of 2*hwttr+1 pixels
+                     hwttc_allT = [10 10 10 10 10]; % col half width (pixels)
                      
-                     wrq_allT = [7 7 7 7];
-                     wcq_allT = [0 0 0 0];
+                     % number of boxes in the rows and columns directions
+                     wrq_allT = [16 16 16 16 16];
+                     wcq_allT = [0 0 0 0 0];
                      
                      % tuning the center of the reciprocal space for the CC2avg
                      % analysis (it can be larger than Ncs and Nrs respectively
-                     offsetcc_allT = [0 0 0 0];
-                     offsetrc_allT = [0 0 0 0];
+                     offsetcc_allT = [0 0 0 0 0];
+                     offsetrc_allT = [0 0 0 0 0];
                      
-                     %tbin_allT = [10 10 10 10]; % number of scans to bin together for 2-time calcs
-                    tbin_allT = [5 5 3 3];
+                     % number of scans to bin together for 2-time corr calcs
+                    tbin_allT = [10 10 10 10 10];
                      % Note sumrois_wNaN doesn't work with single-pixel ROIs
                      
-                     CWID_allT = [0.3 0.3 0.3 0.3]; % Parameter for integer/half-integer ML integration
+                     CWID_allT = [0.3 0.3 0.3 0.3 0.3]; % Parameter for integer/half-integer ML integration
                      
                      % degree of the polynomial when we fit the IInormbb reference
-                     % in the new way of analysis
-                     N_degree_allT = [1 1 1 1];
+                    
+                     N_degree_allT = [1 1 1 1 1];
                      
                  case 'only_data'
                      
