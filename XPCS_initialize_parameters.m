@@ -195,7 +195,7 @@ classdef XPCS_initialize_parameters
                 case 'only_data'
                     
                      % temperatures in C
-                    TCV = [800]; % Equilibrium Thermocouple (new heater)
+                    TCV = [850]; % Equilibrium Thermocouple (new heater)
                     
                     % power in Watts
                     PWV = [25];
@@ -204,7 +204,7 @@ classdef XPCS_initialize_parameters
                     specfilenameM = ['2018_0813_1'];
                     
                     % scans number (see lab book)
-                    SCNstrM = ['011']; % Equilibrium
+                    SCNstrM = ['064']; % Equilibrium
                     
                     % Center pixels in between the CTRS
                     %XCENV = [230;236;240;240];% del
@@ -225,7 +225,7 @@ classdef XPCS_initialize_parameters
                     ymax = [8];
                     
                     % Min and max on time range for delta-time average
-                    tminv = [100];
+                    tminv = [200];
                     tmaxv = [4000];
                     %tminv = [720; 2500;1110;200];
                     %tmaxv = [1400;3500;2000;600];
@@ -437,11 +437,11 @@ classdef XPCS_initialize_parameters
                      
                      
                      hwttr_allT = [0 ]; % row half width (pixels)=> box of 2*hwttr+1 pixels
-                     hwttc_allT = [1]; % col half width (pixels)
+                     hwttc_allT = [2]; % col half width (pixels)
                      
                      % number of boxes:
                      wrq_allT = [16];
-                     wcq_allT = [7];
+                     wcq_allT = [4];
                      
                      % tuning the center of the reciprocal space for the CC2avg
                      % analysis (it can be larger than Ncs and Nrs respectively

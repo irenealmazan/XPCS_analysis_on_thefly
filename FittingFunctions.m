@@ -75,7 +75,7 @@ classdef FittingFunctions
             for jj=1:numel(CCfunc)
                 
                 [ycalc,pout,plegend,kvg,iter,corp,covp,covr,stdresid,Z,r2]=leasqr(CCfunc(jj).time_1D(fit_range)',CCfunc(jj).CCNdtV(fit_range),opts_struct.pin,fitfunc_str,opts_struct.stol,opts_struct.niter,sqrt(opts_struct.w),opts_struct.dp);                
-                
+
                 fitresult(jj).fitfunc = ycalc;
                 fitresult(jj).x = CCfunc(jj).time_1D(fit_range);
                 fitresult(jj).y = CCfunc(jj).CCNdtV(fit_range);

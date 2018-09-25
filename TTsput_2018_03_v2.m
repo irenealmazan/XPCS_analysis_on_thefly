@@ -47,6 +47,13 @@ flag_equil_or_growth = 'only_data';
 % set the scans that you want to read
 iTV = [1:numel(iiT)];
 
+% in which direction we will do the analysis:
+
+ flag_row_col = 'row'; % 'row' = columns are fixed and rows are variable; 'col' = rows are fixed and columns are variable
+ num_col_or_row_V = [1:9];
+    
+
+
 %_._._._._._._._._._._._._._._._._._._._._._._._._.._._._._._._._._._.._.._._._______________________
 if ~skip
     disp('Recalculating 2-time from experimental datasets.');
@@ -106,9 +113,7 @@ for iT = iTV
     
     [Allscans(iT).CCN2avg_struct] = XPCS_analysis.from_CCN2V_to_CCN2avg(Allscans(iT),iT,hwttr_allT,hwttc_allT,wrq_allT,wcq_allT,offsetcc_allT,offsetrc_allT,D_ds,kvector,pixel_size,th_Bragg);
     
-    flag_row_col = 'row';
-    num_col_or_row = 14;
-    
+  
     %DisplayFunctions_XPCS.display_IInormbbref(Allscans(iT).IIbin_struct,Allscans(iT).CCN2avg_struct.boxcenterrc,50+iT,AXISdet,D_ds,kvector,pixel_size,th_Bragg);
 
      % plot the CTR images in pixels:
@@ -127,13 +132,20 @@ for iT = iTV
     
     [Allscans(iT).CCN2S_struct] = XPCS_analysis.from_CCN2avg_to_CCN2S(Allscans(iT).CCN2avg_struct);
     
-    [Allscans(iT).CCN2S_struct] = XPCS_analysis.fit_CCN2S_with_leasqr(Allscans(iT).CCN2S_struct,iT,pin_iiT,dp_iiT,'FittingFunctions.CCN2single_fit',[3:1:round(fitrange_time_iiT(iT)*Allscans(iT).IIbin_struct.Ntb)],num_col_or_row,flag_row_col,200);
     
-    figh = 400+iT+num_col_or_row;
-    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,[1:numel(Allscans(iT).CCN2S_struct.scancq(num_col_or_row).scanrq(1).CCNdtV_fit.pout)-1],figh);
+end
+
+for iT = iTV
     
-    DisplayFunctions_XPCS.display_IIbinstruct_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
-    
+    for num_col_or_row = num_col_or_row_V
+        [Allscans(iT).CCN2S_struct] = XPCS_analysis.fit_CCN2S_with_leasqr(Allscans(iT).CCN2S_struct,iT,pin_iiT,dp_iiT,'FittingFunctions.CCN2single_fit',[3:1:round(fitrange_time_iiT(iT)*Allscans(iT).IIbin_struct.Ntb)],num_col_or_row,flag_row_col,200);
+        
+        figh = 400+iT+num_col_or_row;
+        [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,[1:numel(Allscans(iT).CCN2S_struct.scancq(num_col_or_row).scanrq(1).CCNdtV_fit.pout)-1],figh);
+        
+        DisplayFunctions_XPCS.display_IIbinstruct_CCN2S_CCN2avg(Allscans(iT),num_col_or_row,flag_row_col,101+iT,[2:Allscans(iT).IIbin_struct.Ntb],AXISdet);
+        
+    end
 end
 
 
@@ -141,14 +153,14 @@ end
 
  % Fit the taus at different temperatures 
 pp_index = 3;
-[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,num_col_or_row,flag_row_col,601);
+[pout_struct] = DisplayFunctions_XPCS.display_fit_result_log(Allscans(iTV),pp_index,num_col_or_row_V,flag_row_col,601);
 
 % fit pout(3,:)= tau to a power law 1/x
 
 for iT = iTV
     
-    figh = 400+iT+num_col_or_row;
-    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row,flag_row_col,[3],figh);
+    figh = 400+iT+num_col_or_row_V;
+    [Allscans_fit(iT).pout,Allscans_fit(iT).sigma] = DisplayFunctions_XPCS.display_fit_result(Allscans(iT).CCN2S_struct,num_col_or_row_V,flag_row_col,[3],figh);
    
     
     figure;

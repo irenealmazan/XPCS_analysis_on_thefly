@@ -1037,7 +1037,7 @@ classdef DisplayFunctions_XPCS
                         XLabelstr = 'qvector\_nu in 1/A';
                         switch pp
                             case 3
-                                Axislim_vect = [-2e-2 2e-2 0 2.5e3];
+                                Axislim_vect = [-2e-2 2e-2 0 1.5e3];
                             otherwise
                                 Axislim_vect = [-2e-2 2e-2  -abs(min(pout(:,pp)))-1e-4 abs(max(pout(:,pp)))+1e-4];
                         end
@@ -1258,9 +1258,9 @@ classdef DisplayFunctions_XPCS
             end
             
             fig_h = figure(fignum);            
-            subh1 = subplot(121);
+            subh1 = subplot(1,2,1);
             errorbar(vel_struct.temp,vel_struct.vel_AngsperSec,vel_struct.vel_sigma_AngsperSec,'ob');
-            subh2 = subplot(122);
+            subh2 = subplot(1,2,2);
             errorbar(vel_struct.temp,vel_struct.growth_invSec,vel_struct.growth_sigma_invSec,'ob');
             
             
@@ -1303,10 +1303,10 @@ classdef DisplayFunctions_XPCS
          function display_growth_vs_power(power_vector,vel_struct,index_vect, temperature_str,fignum)
             
             figure(fignum);
-            subh1 = subplot(121);
+            subh1 = subplot(1,2,1);
             errorbar(power_vector,vel_struct.vel_AngsperSec(index_vect),vel_struct.vel_sigma_AngsperSec(index_vect),'ob');
             
-            subh2 = subplot(122);
+            subh2 = subplot(1,2,2);
             errorbar(power_vector,vel_struct.growth_invSec(index_vect),vel_struct.growth_sigma_invSec(index_vect),'ob');
             
             Namestr =  ['Growth rate and velocity vs power at ' temperature_str];
